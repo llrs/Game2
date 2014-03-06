@@ -99,12 +99,15 @@ with the age calculates the damage he can do."""
 
     # returns who he is
     def __str__(self):
+        """Explains a little about herself"""
         return("the hero "+self.__name+"!") #Used somewhere, check how it works
     # Prints I am ready for the battle
     def talk(self):
+        """Some sentences"""
         print("H: I am ready for the battle")
     # Attack a enemy with damage
     def attack(self, enemy, damage):
+        """Given an enemy attacks her with damage or a formula depending on the hero properties """
         damage*=((self.hits+1)/(self.day+1)+(1+self.hits)/(Hero.hits+1)+Hero.hits/100+Hero.hits/(self.day+self.hits+1)+(1+self.kills)/(1+Hero.hits))/3
         #This works fine stabilized about 80 damage*=((self.hits+1)/(self.day+1)+(1+self.hits)/(Hero.hits+1)+Hero.hits/100+Hero.hits/(self.day+self.hits+1))/3
         Hero.hits+=1
@@ -122,6 +125,7 @@ with the age calculates the damage he can do."""
 
     #Defining what happens when hitted
     def damaged(self, damage):
+        """Recieve the damage, if there is defense or shield he receives less damage."""
         if self.__shield>0:
             damage-=self.__shield
         if 'iron shield' in self.invent:
@@ -137,8 +141,9 @@ with the age calculates the damage he can do."""
         else:
             print("H: HA! You almost miss this one.")
 
-    # Adding(quantity>0) and removing(quantity<0) elements of the inventory
+    
     def inventory(self, name, quantity):
+        """If object was not there is added, if it was it is added, or if the quantity is lesser than 0 then it removes this quantity."""
         if quantity>0:
             print("You found", quantity, name)
             a=input("Do you want to add it to the inventory?\t")
@@ -164,25 +169,76 @@ with the age calculates the damage he can do."""
 # Defining a neutral AI
 class Player(Hero):
     """A neutral player"""
-    def __init__(self, name, i, j):
+    def __init__(self, name, age, shield, health, i, j):
+        """Provide the minimal information, name, position x, and position y."""
+        super(Hero, self).__init__(name, age, shield, health)
         self.name=name
         self.invent={}
         self.i=i
         self.j=j
-                
+
+    @property
+    def name(self):
+        """Redefeining his name"""
+        return self.__name
+    @name.setter
+    def name(self, new_name): #Method
+        if new_name=="":
+            print("Ehh I should have a name.")
+        elif new_name.isdigit()==True:# Check if it has numbers.
+            print("Please introduce a valid name.")
+        else:
+            self.__name = new_name
+        
+
     def talk(self):
+        """A minimal talk, the object 'presents' itself"""
         a= "Hi I am "+self.name
         return a
-            
+    def inventary_generator(self):
+        """Creates a random inventory for the player"""
+        import random as rdm
+        r1=rdm.randint(1,20)
+        r2=rdm.randint(1,10)
+        print(r1, r2)
+        if r1%2==0:
+            self.inventory("iron shield", r2)
+        if r1%3==0:
+            self.inventory("wood shield", r2)
+        if r1%5==0:
+            self.inventory("shield", r2)
+        if r1%7==0:
+            self.inventory("other things", r2)
+        else:
+            print("I don't have anything to add :(")
+    def trade(self, player):
+        self.sell={}
+        """Set the prices and exchange the objects with player"""
+        import random as rdm
+        r1=rdm.random()
+        print(r1)
+        print("Do you want to buy or sell something?\nHere are my offers:")
+        print("""I sell each item for the following price:\nItem         trade
+-------------------/""")
+        for key in player.invent.keys():            
+            if key in self.invent.keys():
+                self.sell[key]=truncate(1/player.invent[key]+r1)
+                print(key, "at", self.sell[key])
+            else:
+                print(key, "     ---")
+        
+        print("If you want to sell me something, I wait to know what you offer before saying anything else")
+                
 # Defining enemy type
 class Enemy(object):
-    """Enemy!!"""
+    """Defines Enemy!!"""
     total=0
     types_total=0
     types={}
 
     #Define the initial Enemy
     def __init__(self, creature="Troll", damage=30, defense=0, life=100, enemy="Hero"):
+        """With the creature, defines the name, defense protect from each attack recieved the amount"""
         # Checking the types
         if creature=="":
             print("Please introduce a valid name.")
@@ -222,10 +278,12 @@ class Enemy(object):
 
     #Defining other methods
     def __str__(self):
+        """Explains a little about herself"""
         return("A ancient and unbelivable creature")
 
     #Defining when it attacks
     def attack(self, enemy, damage):
+        """Given an enemy, attacks her with damage"""
         if damage==None or damage==0:
             print("Pleas if you want to attack, do it!")
         else:
@@ -243,6 +301,7 @@ class Enemy(object):
 
     #Defining when it is hit
     def damaged(self, damage):
+        """Recieve the damage of an attack, if there is some defense, then it receives less"""
         if self.__defense>0:
             damage-=self.__defense
         self.life-=damage
