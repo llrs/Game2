@@ -142,36 +142,61 @@ with the age calculates the damage he can do."""
             print("H: HA! You almost miss this one.")
 
     
-    def inventory(self, name, quantity):
+    def inventory(self, name, quantity, pr=True):
         """If object was not there is added, if it was it is added, or if the quantity is lesser than 0 then it removes this quantity."""
-        if quantity>0:
-            print("You found", quantity, name)
-            a=input("Do you want to add it to the inventory?\t")
-            if name not in self.invent:
-                if a.lower()=='y' or a.lower()=='yes':
+        if pr==True:
+            if quantity>0:
+                print("You found", quantity, name)
+                a=input("Do you want to add it to the inventory?\t")
+            elif quantity<0:
+                a=input("Do you want give it away?\t")
+            else:
+                print("Sorry you can't add 0 item")
+                
+            if a.lower()=='y' or a.lower()=='yes':
+                if name not in self.invent:
                     self.invent[name]= quantity
                 else:
-                    print("Ok, do whatever you want...")
+                    self.invent[name]+=quantity
             else:
-                self.invent[name]+=quantity
+                print("You canceled the action")
             print("Now your inventory is", self.invent)
-        else:
-            a=input("Do you want give it away?\t")
+        elif pr==False:
             if name not in self.invent:
-                if a.lower()=='y' or a.lower()=='yes':
-                    self.invent[name]= quantity
-                else:
-                    print("Ok, do whatever you want...")
+                self.invent[name]= quantity
             else:
                 self.invent[name]+=quantity
-            print("Now your inventory is", self.invent)
+        elif pr!=True or pr!=False:
+            print("The parameter pr should be True or False")
+            
+    def trade(self):
+        """Let you decide which prices do you sell the objects of the intentary"""
+        self.sell={}
+        print("You have this inventary:\n", self.invent)
+        print("If you set the price to 0, you give it gratis, if you set it to any value which is not a number it will not be sold.")
+        for item in self.invent:
+            print("At which price do you want to sell ", item+"s", "?", sep='', end='\t')
+            try:
+                a=float(input())
+                self.sell[item]=a
+            except ValueError:
+                pass
+            except:
+                print("You didn't set a price or say anything not to sell it. I didn't understand what do you want...")
+        print("You sell the the following elements at this price:\n", self.sell)
+            
+        
+            
+        
 
 # Defining a neutral AI
 class Player(Hero):
     """A neutral player"""
     def __init__(self, name, age, shield, health, i, j):
         """Provide the minimal information, name, position x, and position y."""
-        super(Hero, self).__init__(name, age, shield, health)
+        self.age=age
+        self.shield=shield
+        self.health=health
         self.name=name
         self.invent={}
         self.i=i
@@ -195,28 +220,24 @@ class Player(Hero):
         """A minimal talk, the object 'presents' itself"""
         a= "Hi I am "+self.name
         return a
-    def inventary_generator(self):
+    def inventory_generator(self):
         """Creates a random inventory for the player"""
         import random as rdm
         r1=rdm.randint(1,20)
         r2=rdm.randint(1,10)
-        print(r1, r2)
         if r1%2==0:
-            self.inventory("iron shield", r2)
+            self.inventory("iron shield", r2, False)
         if r1%3==0:
-            self.inventory("wood shield", r2)
+            self.inventory("wood shield", r2, False)
         if r1%5==0:
-            self.inventory("shield", r2)
+            self.inventory("shield", r2, False)
         if r1%7==0:
-            self.inventory("other things", r2)
-        else:
-            print("I don't have anything to add :(")
+            self.inventory("other things", r2, False)
     def trade(self, player):
+        """Set the prices and exchange objects with player."""
         self.sell={}
-        """Set the prices and exchange the objects with player"""
         import random as rdm
         r1=rdm.random()
-        print(r1)
         print("Do you want to buy or sell something?\nHere are my offers:")
         print("""I sell each item for the following price:\nItem         trade
 -------------------/""")
@@ -228,7 +249,25 @@ class Player(Hero):
                 print(key, "     ---")
         
         print("If you want to sell me something, I wait to know what you offer before saying anything else")
-                
+        player.trade()
+        print("Well, maybe we can arrange some kind of deal...")
+        for item in player.sell:
+            if player.sell[item]<self.sell[item]:
+                try:
+                    offer="How many "+item+" do you offer?"
+                    a=int(input(offer))
+                except ValueError:
+                    a=int(input("Sorry I didn't understand you. How many?"))
+                    
+                if player.invent[item]>a:
+                    player.invent[item]-=a
+                    self.invent[item]+=a
+                if player.invent[item]<=a:
+                    print("I took everything")
+                    self.invent[item]+=player.invent[item]
+                    player.invent[item]=0
+        print("Now you have", player.invent)
+                    
 # Defining enemy type
 class Enemy(object):
     """Defines Enemy!!"""
