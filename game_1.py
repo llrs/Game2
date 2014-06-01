@@ -61,7 +61,7 @@ def game():
     movement=0
     map1=Maping()
     i=j=(map1.positions.shape[1]+1)/2
-    a=Player("Manolo", i+1, j+1)
+    #a=Player("Manolo", i+1, j+1)
 
     print("He was at his house when he decided to go out, and help other people however he could.",
       "\nSo he decided to go outside towards..")
@@ -145,9 +145,9 @@ def game():
             print("Please introduce a valid input")
             ma=input(move)
         # Starts the battle agains the dark forces...
-        if i==a.i and j==a.j:
-            print(a)
-            a.trade(prota)
+##        if i==a.i and j==a.j:
+##            print(a)
+##            a.trade(prota)
         
         Battle(prota)
         prota.day+=1
