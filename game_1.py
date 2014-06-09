@@ -8,6 +8,7 @@ from fight import *         # Import how the fight is done
 from Place import *         # Import the map, and the generator
 from characters import *    # Import the characters definitions
 import numpy as np
+from tkinter import *
 
 Menu="""
 WELCOME TO SPM GAME
@@ -185,3 +186,51 @@ while True:
     else:
         print("Now you will need to reboot the game, if you really want to play it.")
         break
+
+class Application(Frame):
+    """A GUI application with three buttons"""
+    def __init__(self, master):
+        """Initialize the Frame."""
+        super(Application, self).__init__(master)
+        self.grid()
+        self.bttn_clicks = 0
+        self.create_widgets()
+        
+    def create_widgets(self):
+        """Create three buttons that do something."""
+        
+        Label(self, text = "WELCOME TO SPM GAME"
+              ).grid(row = 0, column = 1, columnspan = 2)
+        Label(self, text = "(SINGLE PLAYER MAP GAME)"
+              ).grid(row = 1, column = 1, columnspan = 2)
+        Label(self, text = "Please choose an option:"
+              ).grid(row = 3, column = 1, columnspan = 2)
+        self.submit_bttn = Button(self, text = "Submit", command = self.reveal)
+        self.submit_bttn.grid(row = 2, column =0, sticky = W)
+        self.secret_txt = Text(self, width = 25, height = 5, wrap = WORD)
+        self.secret_txt.grid(row=3, column =0, columnspan =2, sticky = W)
+        self.bttn1 = Button(self, text = "I do something. Total Clicks: 0")
+        self.bttn1["command"] = self.update_count
+        self.bttn1.grid(row = 4, column = 0)
+        
+    def reveal(self):
+        """Display message based on password."""
+        contents = self.pw_ent.get()
+        if contents == "secret":
+            message = "Ups"
+        elif contents == "hi":
+            message = "Hi! How are you?"
+        else:
+            message ="No, this is not the password"
+        self.secret_txt.delete(0.0, END) # Deletes info
+        self.secret_txt.insert(0.0, message)
+    def update_count(self):
+        """Increase click count and display new total"""
+        self.bttn_clicks +=1
+        self.bttn1["text"] = "Total Clicks: {}".format(self.bttn_clicks)
+
+root = Tk()
+root.title("App2")
+root.geometry("300x180")
+app = Application(root)
+root.mainloop()
