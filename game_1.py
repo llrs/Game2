@@ -205,7 +205,7 @@ class Application(Frame):
               ).grid(row = 1, column = 1, columnspan = 2)
         Label(self, text = "Please choose an option:"
               ).grid(row = 3, column = 1, columnspan = 2)
-        self.submit_bttn = Button(self, text = "Submit", command = self.reveal)
+        self.submit_bttn = Button(self, text = "Start a new game", command = game())
         self.submit_bttn.grid(row = 2, column =0, sticky = W)
         self.secret_txt = Text(self, width = 25, height = 5, wrap = WORD)
         self.secret_txt.grid(row=3, column =0, columnspan =2, sticky = W)
