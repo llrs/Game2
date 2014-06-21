@@ -10,19 +10,6 @@ from characters import *    # Import the characters definitions
 import numpy as np
 from tkinter import *
 
-
-Menu="""
-WELCOME TO SPM GAME
-(SINGLE PLAYER MAP GAME)
-
-Please choose an option:
- - Start a new game (N)
- - Load a saved game (L)
- - Save the game (S)
- - About this game (A)
- - Instructions (I)
- 
-You want to:"""
 # Defining some general things
 typic_answer=("yes", "y", "no", "n", "quit", "q")
 typic_sentence="It is a Yes or Not question, please introduce a valid input.\nTo exit type 'quit' or 'q'"
@@ -171,189 +158,49 @@ class Application(Frame):
         """Create three buttons that do something."""
         
         Label(self, text = "WELCOME TO SPM GAME"
-              ).grid(row = 0, column = 1, columnspan = 2)
+              ).grid(row = 0, column = 1)
         Label(self, text = "(SINGLE PLAYER MAP GAME)"
-              ).grid(row = 1, column = 1, columnspan = 2)
+              ).grid(row = 1, column = 1)
         Label(self, text = "Please choose an option:"
-              ).grid(row = 2, column = 0, sticky = W, columnspan = 2)
-        self.play_bttn = Button(self, text = "Start a new game", command = self.game_starter)
-        self.play_bttn.grid(row = 3, column =0, sticky = W, columnspan = 2)
-        self.load_bttn = Button(self, text = "Load a saved game")
+              ).grid(row = 2, column = 0, sticky = W)
+        # Button to start a new game
+        # TODO: Change the game print commands to "print" in the GUI.
+        self.play_bttn = Button(self, text = "Start a new game",
+                                command = self.game_starter)
+        self.play_bttn.grid(row = 3, column =0, sticky = W,
+                            columnspan = 2)
+        # Button to load the saved game
+        # TODO: Create the option to load from a saved game
+        self.load_bttn = Button(self, text = "Load a saved game",
+                                command = self.evaluate)
         self.load_bttn.grid(row = 4, column =0, sticky = W, columnspan = 2)
-        self.save_bttn = Button(self, text = "Save the game")
+        # Button to save the game
+        # TODO: Create the function to save the game: maps, character, experience...
+        self.save_bttn = Button(self, text = "Save the game",
+                                command = self.evaluate)
         self.save_bttn.grid(row = 5, column =0, sticky = W, columnspan = 2)
-        self.about_bttn = Button(self, text = "About the game", command = self.tell_about)
-        self.about_bttn.grid(row = 6, column =0, sticky = W, columnspan = 2)
-        self.instr_bttn = Button(self, text = "Instructions", command = self.tell_instr)
-        self.instr_bttn.grid(row = 7, column =0, sticky = W, columnspan = 2)
-
-        self.txt = Text(self, width = 100, height = 20, wrap = WORD)
-        self.txt.grid(row = 8, column = 0, columnspan = 5)
-
-    def tell_instr(self):
-        """ Fill text box with instructions"""
-
-        # create the instructions
-        instructions = """WELCOME!
-You decided to give a try or at least read the instructions of the game, the game it tries to be self explanatory, but here you have some more help.\n
-- The game ask you what to do, and prints the options. Give as input the first letter or the word of the option to be accepted.
-Otherwise you can answer with a yes or not.\n
-- You are a man in a Middle Age map working hard. You can explore the map and get some gold, buy and sell, fight, die...
-    Survive! and build your empire if it is what you want!
-- Take into account that you can just save and exit of the game ocasually.
-    Before starting a new adventure save(When it will be abilable is another question)!
-Enjoy! """
-        # display the instructions
-        self.txt.delete(0.0, END)
-        self.txt.insert(0.0, instructions)
-    def tell_about(self):
-        """Fill the box with some considerations about the game"""
-        about = """- This game was develop in Vienna, the course 2013-2014 as a game to learn Python.\n
- - It was initially an exercise of the book 'Python programming for the absolute beginner' but I modified it. Now includes several other things that, I think, are fancy.\n
- - If the game doesn't work try saving all the files in the same folder, it should work.
-    If it still doesn't work, contact me with a issue in github(llrs\game2) or with the mail\n
- - It requires Python 3.3 or higher. You can also use the py2exe program to run independly in a windows system.\n
- - If you have any idea to improve the game or problem,bug, you didn't like it you can reach me by mail at : llopis <at> gmail <dot> company"""
-        # display the instructions
-        self.txt.delete(0.0, END)
-        self.txt.insert(0.0, about)
-    
-
-    def game_starter(self):
-        """Calls the game function"""
-        game()        
-##        self.secret_txt = Text(self, width = 25, height = 5, wrap = WORD)
-##        self.secret_txt.grid(row=3, column =0, columnspan =2, sticky = W)
-##        self.bttn1 = Button(self, text = "I do something. Total Clicks: 0")
-##        self.bttn1["command"] = self.update_count
-##        self.bttn1.grid(row = 4, column = 0)
-##        
-##    def reveal(self):
-##        """Display message based on password."""
-##        contents = self.pw_ent.get()
-##        if contents == "secret":
-##            message = "Ups"
-##        elif contents == "hi":
-##            message = "Hi! How are you?"
-##        else:
-##            message ="No, this is not the password"
-##        self.secret_txt.delete(0.0, END) # Deletes info
-##        self.secret_txt.insert(0.0, message)
-##    def update_count(self):
-##        """Increase click count and display new total"""
-##        self.bttn_clicks +=1
-##        self.bttn1["text"] = "Total Clicks: {}".format(self.bttn_clicks)
-
-root = Tk()
-root.title("Game 2")
-root.geometry("800x500")
-app = Application(root)
-root.mainloop()
-
-
-##while True: 
-##    menu=input(Menu)
-##    if menu.lower()=="n" or menu.lower()=="new":
-##        game()
-##    elif menu.lower()=="l" or menu.lower()=="load":
-##        saved=input("Please paste here exactly the path to the file\t")
-##        #game.load(saved)
-##    elif menu.lower()=="s"  or menu.lower()=="save":
-##        print("Sorry this option is under development")
-##    elif menu.lower()=="a" or menu.lower()=="about":
-##        print("""
-## - This game was develop in Vienna, the course 2013-2014 as a game to learn Python.
-## - It was initially an exercise of the book 'Python programming for the absolute beginner' but I modified it. Now includes several other things that, I think, are fancy.
-## - If the game doesn't work try putting all the files in the same folder, it shouuld work.
-## - It requires Python 3.3 or higher.
-## - If you have any idea or problem you can reach me by mail at : llopis <at> gmail <dot> company""")
-##        
-##    elif menu.lower()=="i" or menu.lower()=="instruction" or menu.lower()=="instructions" or menu.lower()=="instr":
-##        print("""Welcome, you decided to give a try or at least read the instructions of the game, so here they are: The game it tries to be self explanatory, but here you have some more help.
-##     - The game ask you what to do, and prints the options. Give as input the first letter or the word of the option to be accepted.
-##         Otherwise you can answer with a yes or not.
-##     - You are a man in a Middle Age map working hard. You can explore the map and get some gold, buy and sell, fight, die...
-##     - Take into account that you can just save and exit of the game in just some options
-##    """)
-##    elif menu.lower()=="q" or menu.lower()=="quit":
-##        print("I hope you enjoyed the game")
-##        break
-##    else:
-##        print("Now you will need to reboot the game, if you really want to play it.")
-##        break
-
-
-##class Application(Frame):
-##    """ GUI application that creates a story based on user input. """
-##    def __init__(self, master):
-##        """ Initialize Frame. """
-##        super(Application, self).__init__(master)  
-##        self.grid()
-##        self.create_widgets()
-##
-##    def create_widgets(self):
-##        """ Create widgets to get story information and to display story. """
-##        # create instruction label
-##        Label(self,
-##              text = "Enter information for a new story"
-##              ).grid(row = 0, column = 0, columnspan = 2, sticky = W)
-##
-##        # create a label and text entry for the name of a person
-##        Label(self,
-##              text = "Person: "
-##              ).grid(row = 1, column = 0, sticky = W)
-##        self.person_ent = Entry(self)
-##        self.person_ent.grid(row = 1, column = 1, sticky = W)
-##
-##        # create a label and text entry for a plural noun
-##        Label(self,
-##              text = "Plural Noun:"
-##              ).grid(row = 2, column = 0, sticky = W)
-##        self.noun_ent = Entry(self)
-##        self.noun_ent.grid(row = 2, column = 1, sticky = W)
-##
-##        # create a label and text entry for a verb
-##        Label(self,
-##              text = "Verb:"
-##              ).grid(row = 3, column = 0, sticky = W)
-##        self.verb_ent = Entry(self)
-##        self.verb_ent.grid(row = 3, column = 1, sticky = W)
-##     
-##        # create a label for adjectives check buttons
-##        Label(self,
-##              text = "Adjective(s):"
-##              ).grid(row = 4, column = 0, sticky = W)
-##
-##        # create itchy check button
-##        self.is_itchy = BooleanVar()
-##        Checkbutton(self,
-##                    text = "itchy",
-##                    variable = self.is_itchy
-##                    ).grid(row = 4, column = 1, sticky = W)
-##
-##        # create joyous check button
-##        self.is_joyous = BooleanVar()
-##        Checkbutton(self,
-##                    text = "joyous",
-##                    variable = self.is_joyous
-##                    ).grid(row = 4, column = 2, sticky = W)
-##
-##        # create electric check button
-##        self.is_electric = BooleanVar()
-##        Checkbutton(self,
-##                    text = "electric",
-##                    variable = self.is_electric
-##                    ).grid(row = 4, column = 3, sticky = W)
-##
-##        # create a label for body parts radio buttons
-##        Label(self,
-##              text = "Body Part:"
-##              ).grid(row = 5, column = 0, sticky = W)
-##
-##        # create variable for single, body part
-##        self.body_part = StringVar()
-##        self.body_part.set(None)
-##  
+        # About buttoon
+        self.about_bttn = Button(self, text = "About the game",
+                                 command = self.tell_about)
+        self.about_bttn.grid(row = 6, column =0, sticky = W,
+                             columnspan = 2)
+        # Instructions button
+        self.instr_bttn = Button(self, text = "Instructions",
+                                 command = self.tell_instr)
+        self.instr_bttn.grid(row = 7, column =0, sticky = W,
+                             columnspan = 2)
+        # Output text box
+        self.output_text = Text(self, width = 100, height = 20, wrap = WORD)
+        self.output_text.grid(row = 8, column = 0, columnspan = 5)
+        # Input text box
+        self.input_text = Entry(self)
+        self.input_text.grid(row = 3, column = 1, sticky = W)
+        # Submit button
+        # TODO: Change the input so that will do something
+        self.submit_bttn = Button(self, text = "Submit", command = self.evaluate)
+        self.submit_bttn.grid(row = 4, column = 1, sticky = W)
+        
+    # Code for whenever I will need it.
 ##        # create body part radio buttons
 ##        body_parts = ["bellybutton", "big toe", "medulla oblongata"]
 ##        column = 1
@@ -364,56 +211,56 @@ root.mainloop()
 ##                        value = part
 ##                        ).grid(row = 5, column = column, sticky = W)
 ##            column += 1
-##
-##        # create a submit button
-##        Button(self,
-##               text = "Click for story",
-##               command = self.tell_story
-##               ).grid(row = 6, column = 0, sticky = W)
-##
-##        self.story_txt = Text(self, width = 75, height = 10, wrap = WORD)
-##        self.story_txt.grid(row = 7, column = 0, columnspan = 4)
-##
-##    def tell_story(self):
-##        """ Fill text box with new story based on user input. """
-##        # get values from the GUI
-##        person = self.person_ent.get()
-##        noun = self.noun_ent.get()
-##        verb = self.verb_ent.get()
-##        adjectives = ""
-##        if self.is_itchy.get():
-##            adjectives += "itchy, "
-##        if self.is_joyous.get():
-##            adjectives += "joyous, "
-##        if self.is_electric.get():
-##            adjectives += "electric, "
-##        body_part = self.body_part.get()
-##
-##        # create the story
-##        story = "The famous explorer person
-##        story += " had nearly given up a life-long quest to find The Lost City of "
-##        story += noun.title()
-##        story += " when one day, the "
-##        story += noun
-##        story += " found "
-##        story += person + ". A strong, "
-##        story += adjectives
-##        story += "peculiar feeling overwhelmed the explorer. "
-##        story += "After all this time, the quest was finally over. A tear came to "
-##        story += person + "'s "
-##        story += body_part + ". And then, the "
-##        story += noun
-##        story += " promptly devoured "
-##        story += person + ". The moral of the story? Be careful what you "
-##        story += verb
-##        story += " for."
-##        
-##        # display the story                                
-##        self.story_txt.delete(0.0, END)
-##        self.story_txt.insert(0.0, story)
-##
-### main
-##root = Tk()
-##root.title("Mad Lib")
-##app = Application(root)
-##root.mainloop()
+##        # create electric check button
+##        self.is_electric = BooleanVar()
+##        Checkbutton(self,
+##                    text = "electric",
+##                    variable = self.is_electric
+##                    ).grid(row = 4, column = 3, sticky = W)
+
+    def tell_instr(self):
+        """ Fill text box with instructions"""
+        instructions = """WELCOME!
+The game tries to be self explanatory, but this is the help page:\n
+- You are a man in the Middle Age. Your house is on surrounded by dark creatures, defeand your house.
+    You can explore the map and get some gold, buy and sell, fight, die...
+    Survive! and build your empire if it is what you want!
+- The game ask you what to do, and prints the options. Give as input the first letter or the word of the option to be accepted.
+    Otherwise you can answer with a yes or not.\n
+- Take into account that you can just save and exit of the game ocasually.
+    Before starting a new adventure save! (When it will be abilable is another question)
+Enjoy! """
+        # display the instructions
+        self.output_text.delete(0.0, END)
+        self.output_text.insert(0.0, instructions)
+        
+    def tell_about(self):
+        """Fill the box with some considerations about the game"""
+        about = """- This game was develop in Vienna, the course 2013-2014 as a way to learn Python.\n
+ - It was initially an exercise of the book 'Python programming for the absolute beginner' but I modified it. Now includes several other things that, I think, are fancy.\n
+ - If the game doesn't work try saving all the files in the same folder, it should work.
+    If it still doesn't work, contact me with a issue on github(llrs\game2) or with the mail\n
+ - It requires Python 3.3 or higher or you can use the py2exe program to run independly in a windows system.\n
+ - If you have any idea to improve the game or problem, a bug, or simply you didn't like it you can reach me by mail at : llopis <at> gmail <dot> company
+    I am always glad to know that someone played with this game! """
+        # display the about page
+        self.output_text.delete(0.0, END)
+        self.output_text.insert(0.0, about)
+    
+    def game_starter(self):
+        """Calls the game function"""
+        game()        
+
+    def evaluate(self):
+        """Display message based on input."""
+        contents = self.input_text.get()
+        message ="We are working towards make this functional. Please be patient\n"
+        #self.output_text.delete(0.0, END) # Deletes info
+        self.output_text.insert(0.1, message)
+        
+
+root = Tk()
+root.title("Game 2")
+root.geometry("800x500")
+app = Application(root)
+root.mainloop()
