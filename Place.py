@@ -4,19 +4,33 @@
 
 # Code from the web: http://www.redblobgames.com/articles/noise/introduction.html
 mapsize = 20
-noise = 5
+noise = [0.1, 0.5]
+from noise import *
+from numpy import mean
+import random
 
 def adjacent_min(noise):
     output = []
     for i in range(len(noise) - 1):
-        output.append(mean(noise[i], noise[i+1]))
+        output.append(mean(noise[i] + noise[i+1]))
     return output
-import random
-for i in range(5):
-   random.seed(i)
-   noise = [random.randint(1, 3) for i in range(mapsize)]
-   print_chart(i, adjacent_min(adjacent_min(noise)))
 
+##for i in range(5):
+##   #random.seed(i)
+##   noise = [random.randint(1, 3) for i in range(mapsize)]
+##   print_chart(i, adjacent_min(adjacent_min(noise)))
+
+def rougher(noise):
+   output = []
+   for i in range(len(noise) - 1):
+      output.append(0.5 * (noise[i] - noise[i+1]))
+   return output
+
+for i in range(8):
+   random.seed(i)
+   noise = [random.uniform(-1, +1) for i in range(mapsize)]
+   print_chart(i, rougher(noise))
+   
 class Place(object):
     """Where is the action"""
     possible_places=("cave","abandoned house", "castle", "river", "forest", "house",
