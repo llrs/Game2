@@ -1,11 +1,27 @@
 # This file defines how it is defined each place and the map
 #ADD to place: Images, boarders, night, scenario, events
 #Defining where it takes action the game outside rooms...
+
+# Code from the web: http://www.redblobgames.com/articles/noise/introduction.html
+mapsize = 20
+noise = 5
+
+def adjacent_min(noise):
+    output = []
+    for i in range(len(noise) - 1):
+        output.append(mean(noise[i], noise[i+1]))
+    return output
+import random
+for i in range(5):
+   random.seed(i)
+   noise = [random.randint(1, 3) for i in range(mapsize)]
+   print_chart(i, adjacent_min(adjacent_min(noise)))
+
 class Place(object):
     """Where is the action"""
-    possible_places=("cave","abandoned house", "castle", "river", "forest", "house", 
+    possible_places=("cave","abandoned house", "castle", "river", "forest", "house",
                     "mountain", "high mountain", "jungle", "desert", "sea", "lake", "town", "city", "countryside")
-    possible_weather=("rainy", "sunny", "cloudy", "stormy", "windy", "light")    
+    possible_weather=("rainy", "sunny", "cloudy", "stormy", "windy", "light")
     def __init__(self, place="", weather=""):
         """Prove2"""
         import random
@@ -22,7 +38,7 @@ class Place(object):
             self.weather=weather
         else:
             print("Please introduce a valid weather!")
-        
+
     def __str__(self):
         #Defining cave
         if self.place=="cave" and self.weather=="rainy":
@@ -51,7 +67,7 @@ class Place(object):
             return "Oh, this was once a nice house, but now the nature has recovered it"
         elif self.place=="abandoned house" and self.weather=="light":
             return "I am getting near to a town here is an old farm"
-        
+
         #Defining castle
         elif self.place=="castle" and self.weather=="rainy":
             return "At least! That will defend from the creatures outside.."
@@ -149,7 +165,7 @@ class Place(object):
             return "I hope it gets better, I can't see anything with this wind."
         elif self.place=="desert" and self.weather=="light":
             return "At least some water, just a little bit more...\nS***! Another mirage!"
-        
+
         #Defining sea
         elif self.place=="sea" and self.weather=="rainy":
             return "Who would say that I would live long enough to see raining like this in a desert!"
@@ -163,7 +179,7 @@ class Place(object):
             return "I think it comes a storm, I would not risk to sail"
         elif self.place=="sea" and self.weather=="light":
             return "I would like to swim in that sea... or lie on the sand and listen to the waves..."
-       
+
         #Defining lake
         elif self.place=="lake" and self.weather=="rainy":
             return "It must have some exit this lake or in a few moment this land will be underwater."
@@ -205,7 +221,7 @@ class Place(object):
             return "Another time with such a potent wind, it is terrible to cross the street"
         elif self.place=="city" and self.weather=="light":
             return "I would love to visit each tabern of the city."
-        
+
         #Defining house
         elif self.place=="house" and self.weather=="rainy":
             return "Thanks God I am at house"
@@ -219,8 +235,8 @@ class Place(object):
             return "I should see where it comes this wind. I don't wont to get cold inside my own house"
         elif self.place=="house" and self.weather=="light":
             return "It is a good day to start a journay"
-        
-        
+
+
         #Defining countryside
         elif self.place=="countryside" and self.weather=="rainy":
             return "This rain is perfect to grow here wheat"
@@ -240,7 +256,7 @@ class Place(object):
 #Defines the map where it takes places the action
 class Maping(object):
     """The world of the game"""
-    
+
     def __init__(self, large=4):
         #it implies a minimum of 3
         import numpy as np
@@ -251,13 +267,13 @@ class Maping(object):
             except ValueError:
                 print("Please introduce a natural number: 4,5,6,7...")
                 large=int(input("How wide and large should the map be?\t"))
-                
+
         self.large=2*large+1
         self.middle=large+1
         self.places=np.eye(self.large, dtype=object)
         self.positions=np.eye(self.large, dtype='<U20')
         self.count={} #I will store how many are of each type
-        
+
             #Defines acceptable rules for the map creation
         self.options=(Place("cave"),                 #1
                       Place("abandoned house"),      #2
@@ -274,9 +290,9 @@ class Maping(object):
                       Place("town"),                 #13
                       Place("city"),                 #14
                       Place("countryside"))          #15
-        #Check pygames and gamesdev. It doesn't seem to work well 
+        #Check pygames and gamesdev. It doesn't seem to work well
         self.places=np.array([[Place() for i in range(self.large)] for j in range(self.large)], dtype=object)
-        
+
         #Situates the house in the middle of the map and a cave at the south
         #Place a city and a town surrounded in one corner by mountains and high mountains respecitvly
         #Place a river that flows from the town (high mountains to a lake near the city)
@@ -293,7 +309,7 @@ class Maping(object):
         self.places[self.middle*3/2,self.middle*3/2+1].place="mountain"
         self.places[self.middle*3/2+1,self.middle*3/2+1].place="mountain"
         self.places[self.middle*3/2-1, self.middle*3/2].place="lake"
-        
+
         for i in range(self.large):
             for j in range(self.large):
                 self.positions[i,j]=self.places[i,j].place
