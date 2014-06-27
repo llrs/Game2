@@ -8,8 +8,8 @@
 # I need to set some rules that two rivers together canno't be (in parallel)
 # I need a 2D map not a 1D map
 
-mapsize  =  20
-noise_  =  list(range(1,10))
+#mapsize  =  20
+#noise_  =  list(range(1,10))
 from noise import * # Some functions to plot like maps
 from numpy import mean
 import random
@@ -168,7 +168,7 @@ def pnoise(x, y, z):
     AB = p[A + 1] + Z
     B =  p[X + 1] + Y
     BA = p[B] + Z
-    BB = p[B + 1] + Z
+   BB = p[B + 1] + Z
     
     pAA = p[AA]
     pAB = p[AB]
@@ -190,3 +190,11 @@ def pnoise(x, y, z):
     return lerp(w,
                 lerp(v, lerp(u, gradAA, gradBA), lerp(u, gradAB, gradBB)),
                 lerp(v, lerp(u, gradAA1,gradBA1),lerp(u, gradAB1,gradBB1)))
+
+# TODO: Check: https://www.6by9.net/simplex-noise-for-c-and-python/
+# From: https://code.google.com/p/battlestar-tux/source/browse/procedural/simplexnoise.py
+# And the son: https://code.google.com/p/battlestar-tux/source/browse/procedural/simplextextures.py
+
+# From: https://github.com/caseman/noise
+
+# From: https://code.google.com/p/fractalterraingeneration/wiki/Perlin_Noise
