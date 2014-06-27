@@ -8,6 +8,7 @@ import os as _os
 
 output_style = 'text'
 if 'ORG_BXML' in _os.environ: output_style = 'svg'
+
 mapsize = 60
 
 
