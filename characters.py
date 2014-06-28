@@ -220,6 +220,7 @@ class Player(Hero):
         """A minimal talk, the object 'presents' itself"""
         a= "Hi I am "+self.name
         return a
+    
     def inventory_generator(self):
         """Creates a random inventory for the player"""
         import random as rdm
