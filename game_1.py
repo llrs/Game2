@@ -60,7 +60,7 @@ def game():
     direction="Where do you want to move to (N,S,E,W)? \t"
     movement=0
     map1=Maping()
-    i=j=(map1.positions.shape[1]+1)/2
+    i=j=(map1.nam_places.shape[1]+1)/2
     #a=Player("Manolo", i+1, j+1)
 
     print("He was at his house when he decided to go out, and help other people however he could.",
@@ -84,40 +84,40 @@ def game():
                 # If the desired direction is nord, or n
                 if da.lower()=='n'or da.lower()=='nord':
                     i+=1
-                    if i==map1.positions.shape[1]:
+                    if i==map1.obj_places.shape[1]:
                         i=0
                         # If there is a mountain in theplace it cannot cross it
                         # TODO improve this for every direction and sea/lake if in the inventory there is no boat
                         # TODO set direction of fow for rivers, and just be able to cros some of them (the others are unable to cross them)
-                    if map1.places[i,j].place=="mountain" or map1.places[i,j].place=="high mountain":
-                        print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-                        print(map1.places[i, j])
+                    if map1.obj_places[i,j].place=="mountain" or map1.obj_places[i,j].place=="high mountain":
+                        print("Ok, look what you see in the next zone: a", map1.obj_places[i,j].place)
+                        print(map1.nam_places[i, j])
                         print("I can't cross the mountain. I should move around it.")
                         i-=1
                     else:
-                        print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
+                        print("Ok, look what you see in the next zone: a", map1.obj_places[i,j].place)
                         
                 # If the desired direction is south or s
                 elif da.lower()=='s'or da.lower()=='south':
                     i-=1
                     if i<0:
-                        i=map1.positions.shape[1]-1.
-                    print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-                    print(map1.places[i, j])
+                        i=map1.obj_places.shape[1]-1.
+                    print("Ok, look what you see in the next zone: a", map1.obj[i,j].place)
+                    print(map1.nam_places[i, j])
                 # If the desired direction is east or e
                 elif da.lower()=='e'or da.lower()=='east':
                     j+=1
-                    if j==map1.positions.shape[1]:
+                    if j==map1.obj_places.shape[1]:
                         j=0
-                    print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-                    print(map1.places[i, j])
+                    print("Ok, look what you see in the next zone: a", map1.obj_places[i,j].place)
+                    print(map1.nam_places[i, j])
                 # If the desired direction is west or w.
                 elif da.lower()=='w' or da.lower()=='west':
                     j-=1
                     if j<0:
-                        j=map1.positions.shape[1]-1
-                    print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-                    print(map1.places[i, j])
+                        j=map1.obj_places.shape[1]-1
+                    print("Ok, look what you see in the next zone: a", map1.obj_places[i,j].place)
+                    print(map1.obj_places[i, j])
                 # If the answer was in the list but something happened
                 else:
                     print("Something didn't work check your previous answer")
@@ -131,7 +131,7 @@ def game():
                     input("Press any key of the keyboard to close this window.")
                     break
                 elif exits.lower()=='n' or exits.lower()=='not':
-                    print("You stay at the same place", map1.places[i,j].place)
+                    print("You stay at the same place", map1.obj_places[i,j].place)
                     prota.health=100
                 else:
                     print("You didn't decide a reall option so I suppose you want to keep playing")
