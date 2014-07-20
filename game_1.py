@@ -45,12 +45,12 @@ class Application(Frame):
         # Button to load the saved game
         # TODO: Create the option to load from a saved game
         self.load_bttn = Button(self, text = "Load a saved game",
-                                command = self.evaluate)
+                                command = self.development)
         self.load_bttn.grid(row = 4, column =0, sticky = W, columnspan = 2)
         # Button to save the game
         # TODO: Create the function to save the game: maps, character, experience...
         self.save_bttn = Button(self, text = "Save the game",
-                                command = self.evaluate)
+                                command = self.development)
         self.save_bttn.grid(row = 5, column =0, sticky = W, columnspan = 2)
         # About buttoon
         self.about_bttn = Button(self, text = "About the game",
@@ -263,6 +263,13 @@ Enjoy! """
             message ="We are working towards make this functional. Please be patient\n"
             self.output_text.delete(0.0, END) # Deletes info
             self.output_text.insert(0.0, message) # TODO: What does the numbers at the begining?
+
+    def development(self):
+        """Prints alert saying it is still not working."""
+        development = "This feature is still under development"
+        self.output_text.delete(0.0, END)
+        self.output_text.insert(0.0, development)
+        
         
 
 root = Tk()
