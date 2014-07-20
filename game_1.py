@@ -14,10 +14,22 @@ from tkinter import *
 typic_answer=("yes", "y", "no", "n", "quit", "q")
 typic_sentence="It is a Yes or Not question, please introduce a valid input.\nTo exit type 'quit' or 'q'"
 
-#History
-#print("""
-#    This game is in memory of the first multiplayer games like MUD
-#    (Althought I never played them), they cannot be forget. \n\n""")
+# Function to center the window, more on the Wop project
+def center(win):
+    """Center the windows on the screen."""
+    win.update_idletasks()
+    width = win.winfo_width()
+    frm_width = win.winfo_rootx() - win.winfo_x()
+    win_width =  width + 2 * frm_width
+    height = win.winfo_height()
+    titlebar_height = win.winfo_rooty() - win.winfo_y()
+    win_height = height + titlebar_height + frm_width
+    x = win.winfo_screenwidth() // 2 - win_width // 2
+    y = win.winfo_screenheight() // 2 - win_height // 2
+    win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+    if win.attributes('-alpha') == 0:
+        win.attributes('-alpha', 1.0)
+    win.deiconify()
 
 
 class Application(Frame):
@@ -276,4 +288,5 @@ root = Tk()
 root.title("Game 2")
 root.geometry("800x500")
 app = Application(root)
+center(root)
 root.mainloop()
