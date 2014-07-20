@@ -267,13 +267,15 @@ Enjoy! """
                 prota.age+=1
               
 
-    def evaluate(self, message = None):
+    def evaluate(self):
         """Display message based on input."""
+        self.label_input = Label(self, text = "Evaluated")
         self.contents = self.input_text.get()
         if self.contents == '':
             message ="The value cannot be empty, please fill it with the right content"
             self.output_text.delete(0.0, END) # Deletes info
             self.output_text.insert(0.0, message) # TODO: What does the numbers at the begining?
+        
         
     def development(self):
         """Prints alert saying it is still not working."""
