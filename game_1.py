@@ -138,7 +138,6 @@ Enjoy! """
     
     def game_starter(self):
         """Calls the game function"""
-
         self.output_text.delete(0.0, END)
         history = "Our history begins far far away, when the dragons and goblins"\
                   " still dominated the Middle Earth.\nIn that time a man named..."
@@ -271,11 +270,11 @@ Enjoy! """
     def evaluate(self, message = None):
         """Display message based on input."""
         self.contents = self.input_text.get()
-        if self.contents == None:
-            message ="We are working towards make this functional. Please be patient\n"
+        if self.contents == '':
+            message ="The value cannot be empty, please fill it with the right content"
             self.output_text.delete(0.0, END) # Deletes info
             self.output_text.insert(0.0, message) # TODO: What does the numbers at the begining?
-
+        
     def development(self):
         """Prints alert saying it is still not working."""
         development = "This feature is still under development"
