@@ -142,6 +142,7 @@ Enjoy! """
         history = "Our history begins far far away, when the dragons and goblins"\
                   " still dominated the Middle Earth.\nIn that time a man named..."
         self.output_text.insert(0.0, history)
+        answer = True
         self.label_input = Label(self, text = "What is your name?")
         self.label_input.grid(row = 3, column = 1)
         name = self.input_text.get()
@@ -271,6 +272,7 @@ Enjoy! """
         """Display message based on input."""
         self.label_input = Label(self, text = "Evaluated")
         self.contents = self.input_text.get()
+        answer != answer
         if self.contents == '':
             message ="The value cannot be empty, please fill it with the right content"
             self.output_text.delete(0.0, END) # Deletes info
