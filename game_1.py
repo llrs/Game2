@@ -31,7 +31,7 @@ def center(win):
         win.attributes('-alpha', 1.0)
     win.deiconify()
 
-
+# The app of the game
 class Application(Frame):
     """A GUI application for the game"""
     def __init__(self, master):
@@ -77,13 +77,7 @@ class Application(Frame):
         # Output text box
         self.output_text = Text(self, width = 100, height = 20, wrap = WORD)
         self.output_text.grid(row = 8, column = 0, columnspan = 5)
-        # Input text box
-        self.input_text = Entry(self)
-        self.input_text.grid(row = 3, column = 2, sticky = W)
-        # Submit button
-        # TODO: Change the input so that will do something
-        self.submit_bttn = Button(self, text = "Submit", command = self.evaluate)
-        self.submit_bttn.grid(row = 4, column = 2, sticky = W)
+        
 ##        # Quit button
 ##        self.quit_bttn = Button(self, text="QUIT", fg="red", command=self.grid.quit)
 ##        self.quit_bttn.grid(row = 5, column = 1, sticky = W)
@@ -138,18 +132,43 @@ Enjoy! """
     
     def game_starter(self):
         """Calls the game function"""
+        self.play_bttn.configure(text="Restart game")
         self.output_text.delete(0.0, END)
         history = "Our history begins far far away, when the dragons and goblins"\
                   " still dominated the Middle Earth.\nIn that time a man named..."
         self.output_text.insert(0.0, history)
-        answer = True
+        
         self.label_input = Label(self, text = "What is your name?")
         self.label_input.grid(row = 3, column = 1)
-        name = self.input_text.get()
+        # Input text box
+        self.input_text = Entry(self)
+        self.input_text.grid(row = 3, column = 2, sticky = W)
+
+        # Submit button
+        # TODO: Change the input so that will do something
+        self.submit_bttn = Button(self, text = "Submit", command = self.evaluate)
+        self.submit_bttn.grid(row = 4, column = 2, sticky = W)
+        
+        
+    def evaluate(self):
+        """Display message based on input."""
+        global contents
+        contents = self.input_text.get()
+        if contents == '':
+            message ="The value cannot be empty, please fill it with the right content"
+            self.output_text.delete(0.0, END) 
+            self.output_text.insert(0.0, message) 
+        self.game_continue()
+    
+        
+    def game_continue(self):
         # Doesn't need to check it can be all numbers.
+        name = contents
         adventure = "{} started to think about conquering the world"\
                                 " and free it of the nasty creatures!\nAt the age of...".format(name)
-        self.output_text.insert(0.0, adventure)
+        self.output_text.insert(END, adventure)
+
+    def game_continue_2(self):
 
         # Check if it is a valid input of age
         while True:
@@ -268,15 +287,7 @@ Enjoy! """
                 prota.age+=1
               
 
-    def evaluate(self):
-        """Display message based on input."""
-        self.label_input = Label(self, text = "Evaluated")
-        self.contents = self.input_text.get()
-        answer != answer
-        if self.contents == '':
-            message ="The value cannot be empty, please fill it with the right content"
-            self.output_text.delete(0.0, END) # Deletes info
-            self.output_text.insert(0.0, message) # TODO: What does the numbers at the begining?
+    
         
         
     def development(self):
