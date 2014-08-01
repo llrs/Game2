@@ -161,29 +161,29 @@ Enjoy! """
             message ="The value cannot be empty, please fill it with the right content\n"
             self.output_text.delete(0.0, END)
             self.output_text.insert(0.0, message)
-        self.game_continue()
+        self.game_name()
 
 
-    def game_continue(self):
+    def game_name(self):
         # Doesn't need to check it can be all numbers.
         name = contents
         adventure = "{} started to think about conquering the world"\
                                 " and free it of the nasty creatures!\nAt the age of...".format(name)
         self.output_text.insert(END, adventure)
 
-    def game_continue_2(self):
+    def game_age(self):
 
         # Check if it is a valid input of age
-        while True:
-            try:
-                age=int(input("When do you guess?\t"))
-                break
-            except:
-                print("Please introduce a number!")
+        self.label_input["text"]="When do you guess?"
+        
 
-        print("Yes, at the age of", age, "he began to fight against terrible creatures near their house.\n"\
-          "So he got himself a wook sword and started to travel...")
-        print("He knew there were many terrible creatures but he was not afraid of them...")
+        story = "Yes, at the age of {} he began to fight against terrible creatures"\
+                " near their house.\nSo he got himself a wook sword and started to "\
+                "travel...\nHe knew there were many terrible creatures but he was not"\
+                " afraid of them...".format(age)
+        self.output_text.insert(END, story)
+        
+    def game_continue(self, age, name)
 
         # Creating protagonist
         prota=Hero(age=age, name=name)
