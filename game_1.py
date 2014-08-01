@@ -39,7 +39,7 @@ class Application(Frame):
         super(Application, self).__init__(master)
         self.grid()
         self.create_widgets()
-        
+
     def create_widgets(self):
         """Create buttons that do something."""
         Label(self, text = "WELCOME TO SPM GAME"
@@ -75,13 +75,16 @@ class Application(Frame):
         self.instr_bttn.grid(row = 7, column =0, sticky = W,
                              columnspan = 2)
         # Output text box
-        self.output_text = Text(self, width = 100, height = 20, wrap = WORD)
+        self.output_text = Text(self, width = 100, height = 20,
+                                wrap = WORD)
         self.output_text.grid(row = 8, column = 0, columnspan = 5)
-        
+
+
+
 ##        # Quit button
 ##        self.quit_bttn = Button(self, text="QUIT", fg="red", command=self.grid.quit)
 ##        self.quit_bttn.grid(row = 5, column = 1, sticky = W)
-        
+
     # Code for whenever I will need it.
 # http://effbot.org/tkinterbook/tkinter-classes.htm
 ##        # create body part radio buttons
@@ -116,7 +119,7 @@ Enjoy! """
         # display the instructions
         self.output_text.delete(0.0, END)
         self.output_text.insert(0.0, instructions)
-        
+
     def tell_about(self):
         """Fill the box with some considerations about the game"""
         about = """- This game was develop in Vienna, the course 2013-2014 as a way to learn Python.\n
@@ -129,7 +132,7 @@ Enjoy! """
         # display the about page
         self.output_text.delete(0.0, END)
         self.output_text.insert(0.0, about)
-    
+
     def game_starter(self):
         """Calls the game function"""
         self.play_bttn.configure(text="Restart game")
@@ -137,7 +140,7 @@ Enjoy! """
         history = "Our history begins far far away, when the dragons and goblins"\
                   " still dominated the Middle Earth.\nIn that time a man named..."
         self.output_text.insert(0.0, history)
-        
+
         self.label_input = Label(self, text = "What is your name?")
         self.label_input.grid(row = 3, column = 1)
         # Input text box
@@ -148,19 +151,19 @@ Enjoy! """
         # TODO: Change the input so that will do something
         self.submit_bttn = Button(self, text = "Submit", command = self.evaluate)
         self.submit_bttn.grid(row = 4, column = 2, sticky = W)
-        
-        
+
+
     def evaluate(self):
         """Display message based on input."""
         global contents
         contents = self.input_text.get()
         if contents == '':
-            message ="The value cannot be empty, please fill it with the right content"
-            self.output_text.delete(0.0, END) 
-            self.output_text.insert(0.0, message) 
+            message ="The value cannot be empty, please fill it with the right content\n"
+            self.output_text.delete(0.0, END)
+            self.output_text.insert(0.0, message)
         self.game_continue()
-    
-        
+
+
     def game_continue(self):
         # Doesn't need to check it can be all numbers.
         name = contents
@@ -208,7 +211,7 @@ Enjoy! """
                 if ma.lower()=='y' or ma.lower()=='yes':
                     da=input(direction)
                     movement+=1
-                    # Check if it is a valid direction, 
+                    # Check if it is a valid direction,
                     while da.lower()not in ('n', 's', 'e','w', 'nord', 'south', 'east', 'west'):
                         print("Please introduce a valid input")
                         da=input(direction)
@@ -227,7 +230,7 @@ Enjoy! """
                             i-=1
                         else:
                             print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-                            
+
                     # If the desired direction is south or s
                     elif da.lower()=='s'or da.lower()=='south':
                         i-=1
@@ -252,7 +255,7 @@ Enjoy! """
                     # If the answer was in the list but something happened
                     else:
                         print("Something didn't work check your previous answer")
-                # If does want to exit                           
+                # If does want to exit
                 elif ma.lower()=='q' or ma.lower()=='quit':
                     exits=input("Do you really want to quit(q) the game or just not(n) move?\t")
                     # Check that he really want to exit
@@ -266,7 +269,7 @@ Enjoy! """
                         prota.health=100
                     else:
                         print("You didn't decide a reall option so I suppose you want to keep playing")
-                        
+
                 # If the doesn't want to move
                 elif ma.lower()=='n' or ma.lower()=='no':
                     print("You stay at the same place")
@@ -279,24 +282,24 @@ Enjoy! """
     ##        if i==a.i and j==a.j:
     ##            print(a)
     ##            a.trade(prota)
-            
+
             Battle(prota)
             prota.day+=1
             if prota.day//365==1:
                 prota.day=0
                 prota.age+=1
-              
 
-    
-        
-        
+
+
+
+
     def development(self):
         """Prints alert saying it is still not working."""
         development = "This feature is still under development"
         self.output_text.delete(0.0, END)
         self.output_text.insert(0.0, development)
-        
-        
+
+
 
 root = Tk()
 root.title("Game 2")
