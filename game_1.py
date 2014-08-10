@@ -35,13 +35,10 @@ def center(win):
 class Application(Frame):
     """A GUI application for the game"""
     def __init__(self, master):
-        """Initialize the Frame."""
+        import re
+        """Initialize the Frame and create the buttons"""
         super(Application, self).__init__(master)
         self.grid()
-        self.create_widgets()
-
-    def create_widgets(self):
-        """Create buttons that do something."""
         Label(self, text = "WELCOME TO SPM GAME"
               ).grid(row = 0, column = 1)
         Label(self, text = "(SINGLE PLAYER MAP GAME)"
@@ -51,7 +48,7 @@ class Application(Frame):
         # Button to start a new game
         # TODO: Change the game print commands to "print" in the GUI.
         self.play_bttn = Button(self, text = "Start a new game",
-                                command = self.game_starter)
+                                command = self.starter)
         self.play_bttn.grid(row = 3, column =0, sticky = W,
                             columnspan = 2)
         # Button to load the saved game
@@ -78,8 +75,7 @@ class Application(Frame):
         self.output_text = Text(self, width = 100, height = 20,
                                 wrap = WORD)
         self.output_text.grid(row = 8, column = 0, columnspan = 5)
-
-
+        self.function = 0
 
 ##        # Quit button
 ##        self.quit_bttn = Button(self, text="QUIT", fg="red", command=self.grid.quit)
@@ -133,12 +129,12 @@ Enjoy! """
         self.output_text.delete(0.0, END)
         self.output_text.insert(0.0, about)
 
-    def game_starter(self):
+    def starter(self):
         """Calls the game function"""
         self.play_bttn.configure(text="Restart game")
         self.output_text.delete(0.0, END)
         history = "Our history begins far far away, when the dragons and goblins"\
-                  " still dominated the Middle Earth.\nIn that time a man named..."
+                  " still dominated the Middle Earth.\nIn that time a man named...\n"
         self.output_text.insert(0.0, history)
 
         self.label_input = Label(self, text = "What is your name?")
@@ -153,45 +149,34 @@ Enjoy! """
         self.submit_bttn.grid(row = 4, column = 2, sticky = W)
 
 
-    def evaluate(self):
-        """Display message based on input."""
-        global contents
-        contents = self.input_text.get()
-        if contents == '':
-            message ="The value cannot be empty, please fill it with the right content\n"
-            self.output_text.delete(0.0, END)
-            self.output_text.insert(0.0, message)
-        self.game_name()
-
-
     def game_name(self):
         # Doesn't need to check it can be all numbers.
-        name = contents
+        self.name = contents
         adventure = "{} started to think about conquering the world"\
-                                " and free it of the nasty creatures!\nAt the age of...".format(name)
+                                " and free it of the nasty creatures!\nAt the "\
+                                "age of...".format(self.name)
+        self.label_input["text"]="When do you guess?"
+        # Check if it is a valid input of age
         self.output_text.insert(END, adventure)
 
     def game_age(self):
-
-        # Check if it is a valid input of age
-        self.label_input["text"]="When do you guess?"
-        
-
-        story = "Yes, at the age of {} he began to fight against terrible creatures"\
-                " near their house.\nSo he got himself a wook sword and started to "\
-                "travel...\nHe knew there were many terrible creatures but he was not"\
-                " afraid of them...".format(age)
+        self.age = contents
+        story = "Yes, at the age of {} he began to fight against terrible"\
+                " creatures near their house.\nSo he got himself a wook sword"\
+                " and started to travel...\nHe knew there were many terrible "\
+                "creatures but he was not afraid of them...\n".format(self.age)
         self.output_text.insert(END, story)
         
-    def game_continue(self, age, name)
+    def game_continue(self):
 
         # Creating protagonist
-        prota=Hero(age=age, name=name)
+        prota=Hero(age=int(self.age), name=self.name)
 
-        question1="Do you want to fight?\t"
-        question2="Do you want to fight again?\t"
-        move="Do you want to move?\t"
-        direction="Where do you want to move to (N,S,E,W)? \t"
+        question1="Do you want to fight?"
+        question2="Do you want to fight again?"
+        move="Do you want to move?"
+        direction="Where do you want to move to (N,S,E,W)? "
+        self.label_input["text"]= question1
         movement=0
         map1=Maping()
         i=j=(map1.positions.shape[1]+1)/2
@@ -289,9 +274,21 @@ Enjoy! """
                 prota.day=0
                 prota.age+=1
 
-
-
-
+    def evaluate(self):
+        """Display message based on input."""
+        #self.funct=["self.game_name()", "self.game_age()", "self.game_continue()"]
+##        print(i for i in dir(self) not in self.funct)
+##        print(self.funct)
+        global contents
+        contents = self.input_text.get()
+        if contents == '':
+            message ="The value cannot be empty, please fill it with the right "\
+                      "content"
+            self.output_text.delete(0.0, END)
+            self.output_text.insert(0.0, message)
+        else:
+            eval(self.funct[self.function])
+            self.function += 1
 
     def development(self):
         """Prints alert saying it is still not working."""
