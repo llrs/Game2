@@ -287,7 +287,8 @@ Enjoy! """
             self.output_text.delete(0.0, END)
             self.output_text.insert(0.0, message)
         else:
-            eval(self.funct[self.function])
+            funct = self.__funct()
+            eval(funct[self.function])
             self.function += 1
 
     def development(self):
@@ -295,6 +296,26 @@ Enjoy! """
         development = "This feature is still under development"
         self.output_text.delete(0.0, END)
         self.output_text.insert(0.0, development)
+        
+    def __funct(self): # TODO: Improve 
+        """Finds the methods begining with game and prepare them for eval
+[to use in the evaluate function]"""
+        fns = []
+        for p in dir(app):
+            try:
+                a = getattr(app, p)
+            except:
+                continue
+            if hasattr(a, '__code__'):
+                fns.append((a.__code__.co_firstlineno, p))
+        
+        fns = [x[1] for x in sorted(fns) if re.findall("game", x[1]) != []]
+        fns1=[]
+        for i in fns:
+            fns1.append("self.{}()".format(i))
+        return(fns1)
+        
+
 
 
 
