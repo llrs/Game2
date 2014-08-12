@@ -76,6 +76,7 @@ class Application(Frame):
                                 wrap = WORD)
         self.output_text.grid(row = 8, column = 0, columnspan = 5)
         self.function = 0
+        
 
 ##        # Quit button
 ##        self.quit_bttn = Button(self, text="QUIT", fg="red", command=self.grid.quit)
@@ -142,12 +143,12 @@ Enjoy! """
         # Input text box
         self.input_text = Entry(self)
         self.input_text.grid(row = 3, column = 2, sticky = W)
+        self.input_text.bind("<Key-Return>", self.evaluate)
 
         # Submit button
         # TODO: Change the input so that will do something
         self.submit_bttn = Button(self, text = "Submit", command = self.evaluate)
         self.submit_bttn.grid(row = 4, column = 2, sticky = W)
-
 
     def game_name(self):
         # Doesn't need to check it can be all numbers.
@@ -167,26 +168,26 @@ Enjoy! """
                 "creatures but he was not afraid of them...\n".format(self.age)
         self.output_text.insert(END, story)
         
-    def game_continue(self):
+    def game_set(self):
 
         # Creating protagonist
-        prota=Hero(age=int(self.age), name=self.name)
-
-        question1="Do you want to fight?"
-        question2="Do you want to fight again?"
-        move="Do you want to move?"
-        direction="Where do you want to move to (N,S,E,W)? "
+        self.prota=Hero(age=int(self.age), name=self.name)
+        self.fight="Do you want to fight?"
+        self.fight2="Do you want to fight again?"
+        self.move="Do you want to move?"
+        self.direction="Where do you want to move to (N,S,E,W)? "
         self.label_input["text"]= question1
-        movement=0
-        map1=Maping()
-        i=j=(map1.positions.shape[1]+1)/2
+        self.movement=0
+        self.map1=Maping()
+        self.i=self.j=(self.map1.positions.shape[1]+1)/2
         #a=Player("Manolo", i+1, j+1)
 
-        print("He was at his house when he decided to go out, and help other people however he could.",
-          "\nSo he decided to go outside towards..")
+        story = "He was at his house when he decided to go out, and help other "\
+                "people however he could.\nSo he decided to go outside towards.."
+        self.output_text.insert(END, story)
 
         #A condition to keep playing
-        while prota.health>0:
+        if self.prota.health > 0:
 
             # Asks if he want to move
             ma=input(move)
@@ -248,7 +249,7 @@ Enjoy! """
                         print("\nDuring", prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
                               "He has now", prota.invent, "in her pocket or bag.\n\nI hope you have enjoied")
                         input("Press any key of the keyboard to close this window.")
-                        break
+##                        break
                     elif exits.lower()=='n' or exits.lower()=='not':
                         print("You stay at the same place", map1.places[i,j].place)
                         prota.health=100
@@ -288,8 +289,10 @@ Enjoy! """
             self.output_text.insert(0.0, message)
         else:
             funct = self.__funct()
+            self.input_text.delete(0, END)
             eval(funct[self.function])
             self.function += 1
+
 
     def development(self):
         """Prints alert saying it is still not working."""
