@@ -142,7 +142,7 @@ Enjoy! """
         # Input text box
         self.input_text = Entry(self)
         self.input_text.grid(row = 3, column = 2, sticky = W)
-        self.input_text.bind("<Key-Return>", self.evaluate)
+        self.input_text.bind("<Key-Return>", lambda x: self.evaluate())
         
 
         # Submit button
@@ -275,7 +275,7 @@ Enjoy! """
                 prota.day=0
                 prota.age+=1
 
-    def evaluate(self):
+    def evaluate(self, other=None):
         """Display message based on input."""
         #self.funct=["self.game_name()", "self.game_age()", "self.game_continue()"]
 ##        print(i for i in dir(self) not in self.funct)
