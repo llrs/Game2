@@ -16,7 +16,7 @@ typic_sentence="It is a Yes or Not question, please introduce a valid input.\nTo
 
 # Function to center the window, more on the Wop project
 def center(win):
-    """Center the windows on the screen."""
+    """Center the window on the screen."""
     win.update_idletasks()
     width = win.winfo_width()
     frm_width = win.winfo_rootx() - win.winfo_x()
@@ -76,7 +76,6 @@ class Application(Frame):
                                 wrap = WORD)
         self.output_text.grid(row = 8, column = 0, columnspan = 5)
         self.function = 0
-        
 
 ##        # Quit button
 ##        self.quit_bttn = Button(self, text="QUIT", fg="red", command=self.grid.quit)
@@ -144,6 +143,7 @@ Enjoy! """
         self.input_text = Entry(self)
         self.input_text.grid(row = 3, column = 2, sticky = W)
         self.input_text.bind("<Key-Return>", self.evaluate)
+        
 
         # Submit button
         # TODO: Change the input so that will do something
@@ -297,6 +297,10 @@ Enjoy! """
     def development(self):
         """Prints alert saying it is still not working."""
         development = "This feature is still under development"
+##        from tkinter import filedialog
+##        filename = filedialog.askopenfilename() # open file
+##        filename = filedialog.asksaveasfilename()#save file
+##        dirname = filedialog.askdirectory() #where or "" if cancel 
         self.output_text.delete(0.0, END)
         self.output_text.insert(0.0, development)
         
