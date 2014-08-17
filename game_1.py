@@ -138,6 +138,7 @@ Enjoy! """
     def starter(self):
         """Calls the game function"""
         self.play_bttn.configure(text="Restart game")
+        self.function = 0
         self.output_text.delete(0.0, END)
         history = "Our history begins far far away, when the dragons and goblins"\
                   " still dominated the Middle Earth.\nIn that time a man named...\n"
@@ -172,115 +173,113 @@ Enjoy! """
         story = "Yes, at the age of {} he began to fight against terrible"\
                 " creatures near their house.\nSo he got himself a wook sword"\
                 " and started to travel...\nHe knew there were many terrible "\
-                "creatures but he was not afraid of them...\n".format(self.age)
+                "creatures but he was not afraid of them...\nHe was at his house"\
+                " when he decided to go out, and help other people however he "\
+                "could.\nSo he decided to go outside towards..".format(self.age)
         self.output_text.insert(END, story)
-        
-    def game_set(self):
-
-        # Creating protagonist
+        # Creating features
+        # TODO: Check the arguments and ask for the new ones until is valid
         self.prota=Hero(age=int(self.age), name=self.name)
-        self.fight="Do you want to fight?"
-        self.fight2="Do you want to fight again?"
-        self.move="Do you want to move?"
-        self.direction="Where do you want to move to (N,S,E,W)? "
-        self.label_input["text"]= question1
-        self.movement=0
         self.map1=Maping()
         self.i=self.j=(self.map1.positions.shape[1]+1)/2
+        
+        self.fight="Do you want to fight?"
+        self.fight2="Do you want to fight again?"
+        self.movement=0
         #a=Player("Manolo", i+1, j+1)
+        # Asks if he want to move
+        self.label_input["text"]= "Do you want to move?"
+        
+                
+    def game_set2(self):
+        ma = contents
+        if ma.lower in typic_answer:
+            pass
+        else:
+            self.function -= 1
+            
+        if ma.lower()=='y' or ma.lower()=='yes':
+            self.label_input["text"]= "Where do you want to move to (N,S,E,W)?"
+            self.movement+=1
+            
+    def game_set3(self):
+        da = contents
+        # Check if it is a valid direction,
+        # If the desired direction is nord, or n
+        if da.lower()=='n'or da.lower()=='nord':
+            i+=1
+            if i==map1.positions.shape[1]:
+                i=0
+                # If there is a mountain in theplace it cannot cross it
+                # TODO improve this for every direction and sea/lake if in the inventory there is no boat
+                # TODO set direction of fow for rivers, and just be able to cros some of them (the others are unable to cross them)
+            if map1.places[i,j].place=="mountain" or map1.places[i,j].place=="high mountain":
+                print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
+                print(map1.places[i, j])
+                print("I can't cross the mountain. I should move around it.")
+                i-=1
+            else:
+                print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
 
-        story = "He was at his house when he decided to go out, and help other "\
-                "people however he could.\nSo he decided to go outside towards.."
-        self.output_text.insert(END, story)
-
-        #A condition to keep playing
-        if self.prota.health > 0:
-
-            # Asks if he want to move
-            ma=input(move)
-            # Check if it it is a valid answer
-            if ma.lower() in typic_answer:
-                # If the answer is yes ask in which direction
-                if ma.lower()=='y' or ma.lower()=='yes':
-                    da=input(direction)
-                    movement+=1
-                    # Check if it is a valid direction,
-                    while da.lower()not in ('n', 's', 'e','w', 'nord', 'south', 'east', 'west'):
-                        print("Please introduce a valid input")
-                        da=input(direction)
-                    # If the desired direction is nord, or n
-                    if da.lower()=='n'or da.lower()=='nord':
-                        i+=1
-                        if i==map1.positions.shape[1]:
-                            i=0
-                            # If there is a mountain in theplace it cannot cross it
-                            # TODO improve this for every direction and sea/lake if in the inventory there is no boat
-                            # TODO set direction of fow for rivers, and just be able to cros some of them (the others are unable to cross them)
-                        if map1.places[i,j].place=="mountain" or map1.places[i,j].place=="high mountain":
-                            print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-                            print(map1.places[i, j])
-                            print("I can't cross the mountain. I should move around it.")
-                            i-=1
-                        else:
-                            print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-
-                    # If the desired direction is south or s
-                    elif da.lower()=='s'or da.lower()=='south':
-                        i-=1
-                        if i<0:
-                            i=map1.positions.shape[1]-1.
-                        print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-                        print(map1.places[i, j])
-                    # If the desired direction is east or e
-                    elif da.lower()=='e'or da.lower()=='east':
-                        j+=1
-                        if j==map1.positions.shape[1]:
-                            j=0
-                        print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-                        print(map1.places[i, j])
-                    # If the desired direction is west or w.
-                    elif da.lower()=='w' or da.lower()=='west':
-                        j-=1
-                        if j<0:
-                            j=map1.positions.shape[1]-1
-                        print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-                        print(map1.places[i, j])
-                    # If the answer was in the list but something happened
-                    else:
-                        print("Something didn't work check your previous answer")
-                # If does want to exit
-                elif ma.lower()=='q' or ma.lower()=='quit':
-                    exits=input("Do you really want to quit(q) the game or just not(n) move?\t")
-                    # Check that he really want to exit
-                    if exits.lower()=='q' or exits.lower()=='quit':
-                        print("\nDuring", prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
-                              "He has now", prota.invent, "in her pocket or bag.\n\nI hope you have enjoied")
-                        input("Press any key of the keyboard to close this window.")
+        # If the desired direction is south or s
+        elif da.lower()=='s'or da.lower()=='south':
+            i-=1
+            if i<0:
+                i=map1.positions.shape[1]-1.
+            print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
+            print(map1.places[i, j])
+        # If the desired direction is east or e
+        elif da.lower()=='e'or da.lower()=='east':
+            j+=1
+            if j==map1.positions.shape[1]:
+                j=0
+            print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
+            print(map1.places[i, j])
+        # If the desired direction is west or w.
+        elif da.lower()=='w' or da.lower()=='west':
+            j-=1
+            if j<0:
+                j=map1.positions.shape[1]-1
+            print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
+            print(map1.places[i, j])
+        # If the answer was in the list but something happened
+        else:
+            print("Something didn't work check your previous answer")
+                
+        def quit(self):
+            # If does want to exit
+            if ma.lower()=='q' or ma.lower()=='quit':
+                exits=input("Do you really want to quit(q) the game or just not(n) move?\t")
+                # Check that he really want to exit
+                if exits.lower()=='q' or exits.lower()=='quit':
+                    print("\nDuring", prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
+                          "He has now", prota.invent, "in her pocket or bag.\n\nI hope you have enjoied")
+                    input("Press any key of the keyboard to close this window.")
 ##                        break
-                    elif exits.lower()=='n' or exits.lower()=='not':
-                        print("You stay at the same place", map1.places[i,j].place)
-                        prota.health=100
-                    else:
-                        print("You didn't decide a reall option so I suppose you want to keep playing")
-
-                # If the doesn't want to move
-                elif ma.lower()=='n' or ma.lower()=='no':
-                    print("You stay at the same place")
+                elif exits.lower()=='n' or exits.lower()=='not':
+                    print("You stay at the same place", map1.places[i,j].place)
                     prota.health=100
-            # If the answer wast not expected
-            while ma.lower() not in typic_answer:
-                print("Please introduce a valid input")
-                ma=input(move)
-            # Starts the battle againts the dark forces...
-    ##        if i==a.i and j==a.j:
-    ##            print(a)
-    ##            a.trade(prota)
+                else:
+                    print("You didn't decide a reall option so I suppose you want to keep playing")
 
-            Battle(prota)
-            prota.day+=1
-            if prota.day//365==1:
-                prota.day=0
-                prota.age+=1
+            # If the doesn't want to move
+            elif ma.lower()=='n' or ma.lower()=='no':
+                print("You stay at the same place")
+                prota.health=100
+        # If the answer wast not expected
+        while ma.lower() not in typic_answer:
+            print("Please introduce a valid input")
+            ma=input(self.move)
+        # Starts the battle againts the dark forces...
+##        if i==a.i and j==a.j:
+##            print(a)
+##            a.trade(prota)
+
+        Battle(prota)
+        prota.day+=1
+        if prota.day//365==1:
+            prota.day=0
+            prota.age+=1
 
     def evaluate(self):
         """Display message based on input."""
@@ -292,8 +291,7 @@ Enjoy! """
         if contents == '':
             message ="The value cannot be empty, please fill it with the right "\
                       "content"
-            self.output_text.delete(0.0, END)
-            self.output_text.insert(0.0, message)
+            self.output_text.insert(END, message)
         else:
             funct = self.__funct()
             self.input_text.delete(0, END)
@@ -328,10 +326,6 @@ Enjoy! """
         for i in fns:
             fns1.append("self.{}()".format(i))
         return(fns1)
-        
-
-
-
 
 root = Tk()
 root.title("Game 2")
