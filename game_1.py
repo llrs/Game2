@@ -188,19 +188,35 @@ Enjoy! """
         self.movement=0
         #a=Player("Manolo", i+1, j+1)
         # Asks if he want to move
-        self.label_input["text"]= "Do you want to move?"
-        
+        self.input_text.grid_forget()
+        self.label_input.grid_forget()
+        self.direction = StringVar()
+        self.direction.set(None)
+        Label(self, text="Where do you want to move?").grid(row=4, column=1, sticky = E)
+        self.submit_bttn.grid(row = 5, column = 1, sticky = W)
+        directions = ["North", "South", "West", "East"]
+        column = 2
+        for direction in directions:
+            Radiobutton(self,
+                        text = direction,
+                        variable = self.direction,
+                        value = direction
+                        ).grid(row = 4, column = column, sticky= W)
+            column +=1
+
                 
     def game_set2(self):
-        ma = contents
-        if ma.lower in typic_answer:
-            pass
-        else:
-            self.function -= 1
+        pass
+##        ma = contents
+##        if ma.lower in typic_answer:
+##            pass
+##        else:
+##            self.function -= 1
+        
             
-        if ma.lower()=='y' or ma.lower()=='yes':
-            self.label_input["text"]= "Where do you want to move to (N,S,E,W)?"
-            self.movement+=1
+##        if ma.lower()=='y' or ma.lower()=='yes':
+##            self.label_input["text"]= "Where do you want to move to (N,S,E,W)?"
+##            self.movement+=1
             
     def game_set3(self):
         da = contents
@@ -288,7 +304,7 @@ Enjoy! """
 ##        print(self.funct)
         global contents
         contents = self.input_text.get()
-        if contents == '':
+        if self.input_text.winfo_exists() and contents == '':
             message ="The value cannot be empty, please fill it with the right "\
                       "content"
             self.output_text.insert(END, message)
