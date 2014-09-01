@@ -75,6 +75,7 @@ class Application(Frame):
         self.output_text = Text(self, width = 100, height = 20,
                                 wrap = WORD)
         self.output_text.grid(row = 8, column = 0, columnspan = 5)
+##        self.output_text.config(state=DISABLED)
         self.function = 0
 
 ##        # Quit button
@@ -142,7 +143,9 @@ Enjoy! """
         self.output_text.delete(0.0, END)
         history = "Our history begins far far away, when the dragons and goblins"\
                   " still dominated the Middle Earth.\nIn that time a man named...\n"
+        self.output_text.configure(state='normal')
         self.output_text.insert(0.0, history)
+        self.output_text.configure(state=DISABLED)
 
         self.label_input = Label(self, text = "What is your name?")
         self.label_input.grid(row = 3, column = 1)
@@ -166,7 +169,9 @@ Enjoy! """
                                 "age of...".format(self.name)
         self.label_input["text"]="When do you guess?"
         # Check if it is a valid input of age
+        self.output_text.configure(state='normal')
         self.output_text.insert(END, adventure)
+        self.output_text.configure(state=DISABLED)
 
     def game_age(self):
         self.age = contents
@@ -176,7 +181,10 @@ Enjoy! """
                 "creatures but he was not afraid of them...\nHe was at his house"\
                 " when he decided to go out, and help other people however he "\
                 "could.\nSo he decided to go outside towards..".format(self.age)
+
+        self.output_text.configure(state='normal')
         self.output_text.insert(END, story)
+        self.output_text.configure(state=DISABLED)
         # Creating features
         # TODO: Check the arguments and ask for the new ones until is valid
         self.prota=Hero(age=int(self.age), name=self.name)
@@ -205,8 +213,8 @@ Enjoy! """
             column +=1
 
                 
-    def game_set2(self):
-        pass
+##    def game_set2(self):
+##        pass
 ##        ma = contents
 ##        if ma.lower in typic_answer:
 ##            pass
@@ -219,10 +227,11 @@ Enjoy! """
 ##            self.movement+=1
             
     def game_set3(self):
-        da = contents
+        da = self.direction.get()
+        print(da)
         # Check if it is a valid direction,
         # If the desired direction is nord, or n
-        if da.lower()=='n'or da.lower()=='nord':
+        if da.lower()=='n'or da.lower()=='north':
             i+=1
             if i==map1.positions.shape[1]:
                 i=0
@@ -304,15 +313,38 @@ Enjoy! """
 ##        print(self.funct)
         global contents
         contents = self.input_text.get()
-        if self.input_text.winfo_exists() and contents == '':
+        try:
+            self.direction
+            if self.direction.get() == None:
+                message ="The value cannot be empty, please fill it with the right "\
+                         "content"
+                self.output_text.config(state='normal')
+                self.output_text.insert(END, message)
+                self.output_text.config(state=DISABLED)
+        except:
+            pass
+        if  contents == '' and self.direction:
+            pass
+        elif contents == '':
             message ="The value cannot be empty, please fill it with the right "\
                       "content"
+            self.output_text.config(state='normal')
             self.output_text.insert(END, message)
+            self.output_text.config(state=DISABLED)
         else:
+            print(contents)
+            print(self.function)
+            try:
+                print(self.direction.get())
+            except:
+                pass
             funct = self.__funct()
             self.input_text.delete(0, END)
             eval(funct[self.function])
             self.function += 1
+            self.output_text.config(state='normal')
+            self.output_text.insert(END, str(funct[self.function]))
+            self.output_text.config(state=DISABLED)
 
 
     def development(self):
