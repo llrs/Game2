@@ -46,7 +46,6 @@ class Application(Frame):
         Label(self, text = "Please choose an option:"
               ).grid(row = 2, column = 0, sticky = W)
         # Button to start a new game
-        # TODO: Change the game print commands to "print" in the GUI.
         self.play_bttn = Button(self, text = "Start a new game",
                                 command = self.starter)
         self.play_bttn.grid(row = 3, column =0, sticky = W,
@@ -60,7 +59,6 @@ class Application(Frame):
         self.load_bttn.grid(row = 4, column =0, sticky = W, columnspan = 2)
         self.load_bttn.bind("<Key-Return>", lambda x: self.development())
         # Button to save the game
-        # TODO: Create the function to save the game: maps, character, experience...
         self.save_bttn = Button(self, text = "Save the game",
                                 command = self.development)
         self.save_bttn.grid(row = 5, column =0, sticky = W, columnspan = 2)
@@ -88,32 +86,15 @@ class Application(Frame):
 ##        self.quit_bttn = Button(self, text="QUIT", fg="red", command=self.grid.quit)
 ##        self.quit_bttn.grid(row = 5, column = 1, sticky = W)
 
-    # Code for whenever I will need it.
-# http://effbot.org/tkinterbook/tkinter-classes.htm
-##        # create body part radio buttons
-##        body_parts = ["bellybutton", "big toe", "medulla oblongata"]
-##        column = 1
-##        for part in body_parts:
-##            Radiobutton(self,
-##                        text = part,
-##                        variable = self.body_part,
-##                        value = part
-##                        ).grid(row = 5, column = column, sticky = W)
-##            column += 1
-##        # create electric check button
-##        self.is_electric = BooleanVar()
-##        Checkbutton(self,
-##                    text = "electric",
-##                    variable = self.is_electric
-##                    ).grid(row = 4, column = 3, sticky = W)
-
     def save(self):
+        # TODO: Create the function to save the game: maps, character, experience...
         """Stores the information of the map, position and the character to continue later"""
         filename = filedialog.asksaveasfilename()#save file
+
     def open(self):
         """Loads the information of the saved file and uses to recreate that game."""
         filename = filedialog.askopenfilename() # open file
-        dirname = filedialog.askdirectory()
+        dirname = filedialog.askdirectory() #where path or "" if cancel 
 
     def tell_instr(self):
         """ Fill text box with instructions"""
@@ -317,13 +298,9 @@ Enjoy! """
             prota.age+=1
 
     def evaluate(self):
-        """Display message based on input."""
-        #self.funct=["self.game_name()", "self.game_age()", "self.game_continue()"]
-##        print(i for i in dir(self) not in self.funct)
-##        print(self.funct)
+        """Given the entry starts the new function of the game."""
         global contents
         contents = self.input_text.get()
-##        self.direction
         try:
             if self.direction.get() == None:
                 message ="The value cannot be empty, please fill it with the right "\
@@ -335,8 +312,7 @@ Enjoy! """
             pass
         except:
             raise
-##        if self.direction == False:
-##            print("OK")
+
         if contents == '' and self.direction == False:
             message ="The value cannot be empty, please fill it with the right "\
                       "content"
@@ -344,12 +320,6 @@ Enjoy! """
             self.output_text.insert(END, message)
             self.output_text.config(state=DISABLED)
         else:
-            print(contents)
-            print(self.function)
-            try:
-                print(self.direction.get())
-            except:
-                pass
             funct = self.__funct()
             self.input_text.delete(0, END)
             if self.function >= len(funct):
@@ -361,10 +331,6 @@ Enjoy! """
     def development(self):
         """Prints alert saying it is still not working."""
         development = "This feature is still under development"
-##        from tkinter import filedialog
-##        filename = filedialog.askopenfilename() # open file
-##        filename = filedialog.asksaveasfilename()#save file
-##        dirname = filedialog.askdirectory() #where or "" if cancel 
         self.output_text.config(state='normal')
         self.output_text.delete(0.0, END)
         self.output_text.insert(0.0, development)
