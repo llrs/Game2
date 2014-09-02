@@ -51,31 +51,37 @@ class Application(Frame):
                                 command = self.starter)
         self.play_bttn.grid(row = 3, column =0, sticky = W,
                             columnspan = 2)
+        self.play_bttn.bind("<Key-Return>", lambda x: self.starter())
+        self.play_bttn.focus_set()
         # Button to load the saved game
         # TODO: Create the option to load from a saved game
         self.load_bttn = Button(self, text = "Load a saved game",
                                 command = self.development)
         self.load_bttn.grid(row = 4, column =0, sticky = W, columnspan = 2)
+        self.load_bttn.bind("<Key-Return>", lambda x: self.development())
         # Button to save the game
         # TODO: Create the function to save the game: maps, character, experience...
         self.save_bttn = Button(self, text = "Save the game",
                                 command = self.development)
         self.save_bttn.grid(row = 5, column =0, sticky = W, columnspan = 2)
+        self.save_bttn.bind("<Key-Return>", lambda x: self.development())
         # About buttoon
         self.about_bttn = Button(self, text = "About the game",
                                  command = self.tell_about)
         self.about_bttn.grid(row = 6, column =0, sticky = W,
                              columnspan = 2)
+        self.about_bttn.bind("<Key-Return>", lambda x: self.tell_about())
         # Instructions button
         self.instr_bttn = Button(self, text = "Instructions",
                                  command = self.tell_instr)
         self.instr_bttn.grid(row = 7, column =0, sticky = W,
                              columnspan = 2)
+        self.instr_bttn.bind("<Key-Return>", lambda x: self.tell_instr())
         # Output text box
         self.output_text = Text(self, width = 100, height = 20,
                                 wrap = WORD)
         self.output_text.grid(row = 8, column = 0, columnspan = 5)
-##        self.output_text.config(state=DISABLED)
+        self.output_text.config(state=DISABLED)
         self.function = 0
 
 ##        # Quit button
@@ -102,8 +108,10 @@ class Application(Frame):
 ##                    ).grid(row = 4, column = 3, sticky = W)
 
     def save(self):
+        """Stores the information of the map, position and the character to continue later"""
         filename = filedialog.asksaveasfilename()#save file
     def open(self):
+        """Loads the information of the saved file and uses to recreate that game."""
         filename = filedialog.askopenfilename() # open file
         dirname = filedialog.askdirectory()
 
@@ -120,8 +128,10 @@ The game tries to be self explanatory, but this is the help page:\n
     Before starting a new adventure save! (When it will be abilable is another question)
 Enjoy! """
         # display the instructions
+        self.output_text.config(state='normal')
         self.output_text.delete(0.0, END)
         self.output_text.insert(0.0, instructions)
+        self.output_text.config(state=DISABLED)
 
     def tell_about(self):
         """Fill the box with some considerations about the game"""
@@ -133,11 +143,13 @@ Enjoy! """
  - If you have any idea to improve the game or problem, a bug, or simply you didn't like it you can reach me by mail at : llopis <at> gmail <dot> company
     I am always glad to know that someone played with this game! """
         # display the about page
+        self.output_text.config(state='normal')
         self.output_text.delete(0.0, END)
         self.output_text.insert(0.0, about)
+        self.output_text.config(state=DISABLED)
 
     def starter(self):
-        """Calls the game function"""
+        """First function of the game, until it gets the name of the user"""
         self.play_bttn.configure(text="Restart game")
         self.function = 0
         self.output_text.delete(0.0, END)
@@ -200,6 +212,7 @@ Enjoy! """
         self.label_input.grid_forget()
         self.direction = StringVar()
         self.direction.set(None)
+        # Create buttons and asks about where do the user want to move.
         Label(self, text="Where do you want to move?").grid(row=4, column=1, sticky = E)
         self.submit_bttn.grid(row = 5, column = 1, sticky = W)
         directions = ["North", "South", "West", "East"]
@@ -226,75 +239,72 @@ Enjoy! """
 ##            self.label_input["text"]= "Where do you want to move to (N,S,E,W)?"
 ##            self.movement+=1
             
-    def game_set3(self):
+    def game_movement(self):
         da = self.direction.get()
         print(da)
         # Check if it is a valid direction,
         # If the desired direction is nord, or n
         if da.lower()=='n'or da.lower()=='north':
-            i+=1
-            if i==map1.positions.shape[1]:
-                i=0
+            self.i+=1
+            if self.i==self.map1.positions.shape[1]:
+                self.i=0
                 # If there is a mountain in theplace it cannot cross it
                 # TODO improve this for every direction and sea/lake if in the inventory there is no boat
                 # TODO set direction of fow for rivers, and just be able to cros some of them (the others are unable to cross them)
-            if map1.places[i,j].place=="mountain" or map1.places[i,j].place=="high mountain":
-                print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-                print(map1.places[i, j])
+            if self.map1.places[self.i,self.j].place=="mountain" or self.map1.places[self.i,self.j].place=="high mountain":
+                print("Ok, look what you see in the next zone: a", self.map1.places[self.i,self.j].place)
+                print(self.map1.places[self.i, self.j])
                 print("I can't cross the mountain. I should move around it.")
-                i-=1
+                self.i-=1
             else:
-                print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-
+                print("Ok, look what you see in the next zone: a", self.map1.places[self.i,self.j].place)
+                print(self.map1.places[self.i,self.j])
         # If the desired direction is south or s
         elif da.lower()=='s'or da.lower()=='south':
-            i-=1
-            if i<0:
-                i=map1.positions.shape[1]-1.
-            print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-            print(map1.places[i, j])
+            self.i-=1
+            if self.i<0:
+                self.i=self.map1.positions.shape[1]-1.
+            print("Ok, look what you see in the next zone: a", self.map1.places[self.i,self.j].place)
+            print(self.map1.places[self.i,self.j])
         # If the desired direction is east or e
         elif da.lower()=='e'or da.lower()=='east':
-            j+=1
-            if j==map1.positions.shape[1]:
-                j=0
-            print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-            print(map1.places[i, j])
+            self.j+=1
+            if self.j==self.map1.positions.shape[1]:
+                self.j=0
+            print("Ok, look what you see in the next zone: a", self.map1.places[self.i,self.j].place)
+            print(self.map1.places[self.i,self.j])
         # If the desired direction is west or w.
         elif da.lower()=='w' or da.lower()=='west':
-            j-=1
-            if j<0:
-                j=map1.positions.shape[1]-1
-            print("Ok, look what you see in the next zone: a", map1.places[i,j].place)
-            print(map1.places[i, j])
+            self.j-=1
+            if self.j<0:
+                self.j=self.map1.positions.shape[1]-1
+            print("Ok, look what you see in the next zone: a", self.map1.places[self.i,self.j].place)
+            print(self.map1.places[self.i, self.j])
         # If the answer was in the list but something happened
         else:
             print("Something didn't work check your previous answer")
                 
-        def quit(self):
-            # If does want to exit
-            if ma.lower()=='q' or ma.lower()=='quit':
-                exits=input("Do you really want to quit(q) the game or just not(n) move?\t")
-                # Check that he really want to exit
-                if exits.lower()=='q' or exits.lower()=='quit':
-                    print("\nDuring", prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
-                          "He has now", prota.invent, "in her pocket or bag.\n\nI hope you have enjoied")
-                    input("Press any key of the keyboard to close this window.")
+    def quit(self):
+        # If does want to exit
+        if ma.lower()=='q' or ma.lower()=='quit':
+            exits=input("Do you really want to quit(q) the game or just not(n) move?\t")
+            # Check that he really want to exit
+            if exits.lower()=='q' or exits.lower()=='quit':
+                print("\nDuring", prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
+                      "He has now", prota.invent, "in her pocket or bag.\n\nI hope you have enjoied")
+                input("Press any key of the keyboard to close this window.")
 ##                        break
-                elif exits.lower()=='n' or exits.lower()=='not':
-                    print("You stay at the same place", map1.places[i,j].place)
-                    prota.health=100
-                else:
-                    print("You didn't decide a reall option so I suppose you want to keep playing")
-
-            # If the doesn't want to move
-            elif ma.lower()=='n' or ma.lower()=='no':
-                print("You stay at the same place")
+            elif exits.lower()=='n' or exits.lower()=='not':
+                print("You stay at the same place", map1.places[i,j].place)
                 prota.health=100
-        # If the answer wast not expected
-        while ma.lower() not in typic_answer:
-            print("Please introduce a valid input")
-            ma=input(self.move)
+            else:
+                print("You didn't decide a reall option so I suppose you want to keep playing")
+
+        # If the doesn't want to move
+        elif ma.lower()=='n' or ma.lower()=='no':
+            print("You stay at the same place")
+            prota.health=100
+
         # Starts the battle againts the dark forces...
 ##        if i==a.i and j==a.j:
 ##            print(a)
@@ -313,19 +323,21 @@ Enjoy! """
 ##        print(self.funct)
         global contents
         contents = self.input_text.get()
+##        self.direction
         try:
-            self.direction
             if self.direction.get() == None:
                 message ="The value cannot be empty, please fill it with the right "\
                          "content"
                 self.output_text.config(state='normal')
                 self.output_text.insert(END, message)
                 self.output_text.config(state=DISABLED)
+        except AttributeError:
+            pass
         except:
-            pass
-        if  contents == '' and self.direction:
-            pass
-        elif contents == '':
+            raise
+##        if self.direction == False:
+##            print("OK")
+        if contents == '' and self.direction == False:
             message ="The value cannot be empty, please fill it with the right "\
                       "content"
             self.output_text.config(state='normal')
@@ -340,11 +352,10 @@ Enjoy! """
                 pass
             funct = self.__funct()
             self.input_text.delete(0, END)
+            if self.function >= len(funct):
+                self.function -= 1
             eval(funct[self.function])
             self.function += 1
-            self.output_text.config(state='normal')
-            self.output_text.insert(END, str(funct[self.function]))
-            self.output_text.config(state=DISABLED)
 
 
     def development(self):
@@ -354,8 +365,10 @@ Enjoy! """
 ##        filename = filedialog.askopenfilename() # open file
 ##        filename = filedialog.asksaveasfilename()#save file
 ##        dirname = filedialog.askdirectory() #where or "" if cancel 
+        self.output_text.config(state='normal')
         self.output_text.delete(0.0, END)
         self.output_text.insert(0.0, development)
+        self.output_text.config(state=DISABLED)
         
     def __funct(self): # TODO: Improve 
         """Finds the methods begining with game and prepare them for eval
