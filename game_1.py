@@ -43,8 +43,9 @@ class Application(Frame):
               ).grid(row = 0, column = 1)
         Label(self, text = "(SINGLE PLAYER MAP GAME)"
               ).grid(row = 1, column = 1)
-        Label(self, text = "Please choose an option:"
-              ).grid(row = 2, column = 0, sticky = W)
+##        Label(self, text = "Please choose an option:"
+##              ).grid(row = 2, column = 0, sticky = W)
+
         # Button to start a new game
         self.play_bttn = Button(self, text = "Start a new game",
                                 command = self.starter)
@@ -52,34 +53,42 @@ class Application(Frame):
                             columnspan = 2)
         self.play_bttn.bind("<Key-Return>", lambda x: self.starter())
         self.play_bttn.focus_set()
+
         # Button to load the saved game
         # TODO: Create the option to load from a saved game
         self.load_bttn = Button(self, text = "Load a saved game",
                                 command = self.development)
         self.load_bttn.grid(row = 4, column =0, sticky = W, columnspan = 2)
         self.load_bttn.bind("<Key-Return>", lambda x: self.development())
+
         # Button to save the game
         self.save_bttn = Button(self, text = "Save the game",
                                 command = self.development)
         self.save_bttn.grid(row = 5, column =0, sticky = W, columnspan = 2)
         self.save_bttn.bind("<Key-Return>", lambda x: self.development())
+
         # About buttoon
         self.about_bttn = Button(self, text = "About the game",
                                  command = self.tell_about)
         self.about_bttn.grid(row = 6, column =0, sticky = W,
                              columnspan = 2)
         self.about_bttn.bind("<Key-Return>", lambda x: self.tell_about())
+
         # Instructions button
         self.instr_bttn = Button(self, text = "Instructions",
                                  command = self.tell_instr)
         self.instr_bttn.grid(row = 7, column =0, sticky = W,
                              columnspan = 2)
         self.instr_bttn.bind("<Key-Return>", lambda x: self.tell_instr())
+        
         # Output text box
+        self.scroll = Scrollbar(self, orient="vertical")
         self.output_text = Text(self, width = 100, height = 20,
-                                wrap = WORD)
-        self.output_text.grid(row = 8, column = 0, columnspan = 5)
-        self.output_text.config(state=DISABLED)
+                                wrap = WORD, bd=0, yscrollcommand=self.scroll.set)
+        self.output_text.grid(row = 8, column = 0, columnspan = 5, sticky="nsew")
+        self.scroll.grid(row = 8, column = 6, rowspan = 4, sticky="ns")
+        self.output_text.configure(state = DISABLED)
+        self.scroll.config(command=self.output_text.yview)
         self.function = 0
 
 ##        # Quit button
@@ -173,7 +182,7 @@ Enjoy! """
                 " and started to travel...\nHe knew there were many terrible "\
                 "creatures but he was not afraid of them...\nHe was at his house"\
                 " when he decided to go out, and help other people however he "\
-                "could.\nSo he decided to go outside towards..".format(self.age)
+                "could.\nSo he decided to go outside towards..\n".format(self.age)
 
         self.output_text.configure(state='normal')
         self.output_text.insert(END, story)
@@ -184,28 +193,32 @@ Enjoy! """
         self.map1=Maping()
         self.i=self.j=(self.map1.positions.shape[1]+1)/2
         
-        self.fight="Do you want to fight?"
-        self.fight2="Do you want to fight again?"
-        self.movement=0
+##        self.fight="Do you want to fight?"
+##        self.fight2="Do you want to fight again?"
+        
         #a=Player("Manolo", i+1, j+1)
+        
         # Asks if he want to move
         self.input_text.grid_forget()
         self.label_input.grid_forget()
         self.direction = StringVar()
         self.direction.set(None)
         # Create buttons and asks about where do the user want to move.
-        Label(self, text="Where do you want to move?").grid(row=4, column=1, sticky = E)
+        Label(self, text="Where do you want to move?").grid(
+            row=3, column=1, sticky = W)
         self.submit_bttn.grid(row = 5, column = 1, sticky = W)
-        directions = ["North", "South", "West", "East"]
-        column = 2
+        self.movement=0
+        directions = ["North", "South", "West", "East", "Stay"]
+        column = 1
         for direction in directions:
             Radiobutton(self,
                         text = direction,
                         variable = self.direction,
                         value = direction
-                        ).grid(row = 4, column = column, sticky= W)
+                        ).grid(row = 4, column = column, sticky= "ns")
             column +=1
-
+        
+    
                 
 ##    def game_set2(self):
 ##        pass
@@ -222,80 +235,90 @@ Enjoy! """
             
     def game_movement(self):
         da = self.direction.get()
-        print(da)
-        # Check if it is a valid direction,
-        # If the desired direction is nord, or n
-        if da.lower()=='n'or da.lower()=='north':
+
+        # Change the position
+        if da.lower()=='north':
             self.i+=1
-            if self.i==self.map1.positions.shape[1]:
-                self.i=0
-                # If there is a mountain in theplace it cannot cross it
-                # TODO improve this for every direction and sea/lake if in the inventory there is no boat
-                # TODO set direction of fow for rivers, and just be able to cros some of them (the others are unable to cross them)
-            if self.map1.places[self.i,self.j].place=="mountain" or self.map1.places[self.i,self.j].place=="high mountain":
-                print("Ok, look what you see in the next zone: a", self.map1.places[self.i,self.j].place)
-                print(self.map1.places[self.i, self.j])
-                print("I can't cross the mountain. I should move around it.")
-                self.i-=1
-            else:
-                print("Ok, look what you see in the next zone: a", self.map1.places[self.i,self.j].place)
-                print(self.map1.places[self.i,self.j])
-        # If the desired direction is south or s
-        elif da.lower()=='s'or da.lower()=='south':
+        elif da.lower()=="south":
             self.i-=1
-            if self.i<0:
-                self.i=self.map1.positions.shape[1]-1.
-            print("Ok, look what you see in the next zone: a", self.map1.places[self.i,self.j].place)
-            print(self.map1.places[self.i,self.j])
-        # If the desired direction is east or e
-        elif da.lower()=='e'or da.lower()=='east':
+        elif da.lower()=="east":
             self.j+=1
-            if self.j==self.map1.positions.shape[1]:
-                self.j=0
-            print("Ok, look what you see in the next zone: a", self.map1.places[self.i,self.j].place)
-            print(self.map1.places[self.i,self.j])
-        # If the desired direction is west or w.
-        elif da.lower()=='w' or da.lower()=='west':
+        elif da.lower()=="west":
             self.j-=1
-            if self.j<0:
-                self.j=self.map1.positions.shape[1]-1
-            print("Ok, look what you see in the next zone: a", self.map1.places[self.i,self.j].place)
-            print(self.map1.places[self.i, self.j])
-        # If the answer was in the list but something happened
+        else: # The user decided to stay
+            pass
+
+        # If it has reached the end of the map start over:
+        if self.i == self.map1.positions.shape[1]:
+            self.i = 0
+        elif self.i <0:
+            self.i = self.map1.positions.shape[1]-1
+        elif self.j == self.map1.positions.shape[1]:
+            self.j = 0
+        elif self.j < 0:
+            self.j = self.map1.positions.shape[1]-1
+
+        # TODO improve this for every direction and sea/lake if in the inventory there is no boat
+        # TODO set direction of fow for rivers, and just be able to cross some of them (the others are unable to cross them)
+
+        # If the new position is a high mountain then show you can't move further.
+        if self.map1.places[self.i,self.j].place in ["mountain", "high mountain"]:
+            stop = "OH, a {} blocks my way. I should move around it.".format(
+                self.map1.places[self.i,self.j].place)
+            self.output_text.config(state='normal')
+            self.output_text.insert(END, stop)
+            self.output_text.config(state=DISABLED)
+            # Restoring the position 
+            if da.lower()=='north':
+                self.i-=1
+            elif da.lower()=="south":
+                self.i+=1
+            elif da.lower()=="east":
+                self.j-=1
+            elif da.lower()=="west":
+                self.j+=1
         else:
-            print("Something didn't work check your previous answer")
+            desc = "Ok, look what you see in the next zone: a {}\n".format(
+                self.map1.places[self.i,self.j].place)
+            desc2 = str(self.map1.places[self.i,self.j])+"\n"
+            self.output_text.config(state='normal')
+            self.output_text.insert(END, desc)
+            self.output_text.insert(END,desc2)
+            self.output_text.config(state=DISABLED)
+
+##        Battle(self.prota)
+        self.prota.day+=1
+        if self.prota.day//365==1:
+            self.prota.day=0
+            self.prota.age+=1        
                 
     def quit(self):
-        # If does want to exit
+        """A summary of what have been done """
         if ma.lower()=='q' or ma.lower()=='quit':
             exits=input("Do you really want to quit(q) the game or just not(n) move?\t")
             # Check that he really want to exit
             if exits.lower()=='q' or exits.lower()=='quit':
-                print("\nDuring", prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
-                      "He has now", prota.invent, "in her pocket or bag.\n\nI hope you have enjoied")
+                print("\nDuring", self.prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
+                      "He has now", self.prota.invent, "in her pocket or bag.\n\nI hope you have enjoied")
                 input("Press any key of the keyboard to close this window.")
 ##                        break
             elif exits.lower()=='n' or exits.lower()=='not':
-                print("You stay at the same place", map1.places[i,j].place)
-                prota.health=100
+                print("You stay at the same place", self.map1.places[i,j].place)
+                self.prota.health=100
             else:
                 print("You didn't decide a reall option so I suppose you want to keep playing")
 
         # If the doesn't want to move
         elif ma.lower()=='n' or ma.lower()=='no':
             print("You stay at the same place")
-            prota.health=100
+            self.prota.health=100
 
         # Starts the battle againts the dark forces...
 ##        if i==a.i and j==a.j:
 ##            print(a)
 ##            a.trade(prota)
 
-        Battle(prota)
-        prota.day+=1
-        if prota.day//365==1:
-            prota.day=0
-            prota.age+=1
+        
 
     def evaluate(self):
         """Given the entry starts the new function of the game."""
