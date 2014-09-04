@@ -2,6 +2,8 @@
 # ADD to enemy: Movement
 # ADD other players
 
+from tkinter.messagebox import *
+
 # Random things
 def truncate(x):
     bdot, adot = str(x).split('.')
@@ -24,15 +26,16 @@ with the age calculates the damage he can do."""
             self.__name=name
             
         # Checking the age        
-        if age<=0:
-            print("Please introduce a valid age.")
-        elif age<1:
-            print("H: With 0 years old I begin to walk around!")
+        if age<1:
+            showwarning("Very well!","With 0 years old began to walk around!")
+            self.age = 0
         elif age>1 and age<5:
-            print("-That's starting from the very young age!")
+            showwarning("Good","That's starting from the very young age!")
+            self.age = age
         elif age>100:
-            print("Please I think that you don't begin to fight with more than 100 years unless you are an elf.\n",
-                  "Are you really an elf??\nYour age is corrected to 100")
+            showwarning("Ups","You don't begin to fight with more than 100"\
+                               "years unless you are an elf.\n Are you really"\
+                               " an elf??!\nYour age is corrected to 100")
             self.age=100
         else:
             self.age=age
