@@ -11,6 +11,7 @@ import numpy as np
 from tkinter import *
 from tkinter.messagebox import *
 import tkinter.scrolledtext as tkst
+from collections import defaultdict
 
 # Defining some general things
 typic_answer=("yes", "y", "no", "n", "quit", "q")
@@ -167,8 +168,15 @@ class Application(Frame):
 
         # TODO: Delete the buttons and the submit button when Reset is pressed.
         
-##        if self.play_bttn['text']=="Restart game":
-##            Button.state(['disabled'])
+        if self.play_bttn['text']=="Restart game":
+            try:
+                self.buttons
+            except:
+                pass
+            else:
+                for i in self.mybuttons.values():
+                    if i != None:
+                        i[0].configure(state='disabled')
 
     def game_name(self):
         
@@ -231,15 +239,25 @@ class Application(Frame):
             self.movement=0
             directions = ["North", "South", "West", "East", "Stay"]
             column = 1
+
+            self.mybuttons = defaultdict(list)
+                
             for direction in directions:
-                Radiobutton(self,
-                            text = direction,
-                            variable = self.direction,
-                            value = direction
-                            ).grid(row = 4, column = column, sticky= "ns")
+                self.mybuttons[column].append(
+                    Radiobutton(self,
+                                text = direction,
+                                variable = self.direction,
+                                value = direction
+                                ))
+                self.mybuttons[column][0].grid(row = 4, column = column,
+                                               sticky= "ns")
                 column +=1
+
             self.winfo_toplevel().geometry("") # Resize the window
+            self.buttons = True
+            
     def game_movement(self):
+        """"""
         da = self.direction.get()
 
         # Change the position
@@ -312,7 +330,7 @@ class Application(Frame):
     def quit(self):
         """A summary of what have been done """
         if askyesno('Verify', 'Do you really want to quit?'):
-            pass
+            frame.quit()
 ##            print("\nDuring", self.prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
 ##                "He has now", self.prota.invent, "in her pocket or bag.\n\nI hope you have enjoied")
         else:
