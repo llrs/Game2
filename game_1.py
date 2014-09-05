@@ -152,7 +152,9 @@ class Application(Frame):
         self.output_text.insert(0.0, history)
         self.output_text.configure(state=DISABLED)
 
-        self.label_input = Label(self, text = "What is your name?")
+        self.label_text = StringVar()
+        self.label_text.set("What is your name?")
+        self.label_input = Label(self, text = self.label_text.get())
         self.label_input.grid(row = 3, column = 1)
         
         # Input text box
@@ -176,7 +178,8 @@ class Application(Frame):
             else:
                 for i in self.mybuttons.values():
                     if i != None:
-                        i[0].configure(state='disabled')
+                        i[0].grid_remove()
+                self.submit_bttn.grid_remove()
 
     def game_name(self):
         
@@ -194,8 +197,8 @@ class Application(Frame):
             adventure = "{} started to think about conquering the world and free"\
                         " it of the nasty creatures!\nAt the age of...".format(
                             self.name)
-
-            self.label_input["text"]="When do you guess?"
+            self.label_text.set("When do you guess?")
+            self.label_input["text"]= self.label_text.get()
             self.output_text.configure(state='normal')
             self.output_text.insert(END, adventure)
             self.output_text.configure(state=DISABLED)
@@ -232,8 +235,11 @@ class Application(Frame):
             self.label_input.grid_forget()
             self.direction = StringVar()
             self.direction.set(None)
+            
             # Create buttons and asks about where do the user want to move.
-            Label(self, text="Where do you want to move?").grid(
+            self.text_direct = StringVar(self, name= "Where do you want to move?")
+            self.label_direct = Label(self,
+                                      text=self.text_direct).grid(
                 row=3, column=1, sticky = W)
             self.submit_bttn.grid(row = 5, column = 1, sticky = W)
             self.movement=0
@@ -251,6 +257,8 @@ class Application(Frame):
                                 ))
                 self.mybuttons[column][0].grid(row = 4, column = column,
                                                sticky= "ns")
+                if direction == "Stay":
+                    self.mybuttons[column][0].invoke()
                 column +=1
 
             self.winfo_toplevel().geometry("") # Resize the window
