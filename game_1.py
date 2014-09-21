@@ -1,3 +1,4 @@
+#! Python
 #Game version 1
 #  Llopis 15/01/2014
 # This is some kind of MUD game, but not multiplayer and not in dungeons :D
@@ -13,10 +14,6 @@ from tkinter.messagebox import *
 from tkinter import filedialog
 import tkinter.scrolledtext as tkst
 from collections import defaultdict
-
-# Defining some general things
-typic_answer=("yes", "y", "no", "n", "quit", "q")
-typic_sentence="It is a Yes or Not question, please introduce a valid input.\nTo exit type 'quit' or 'q'"
 
 # Function to center the window
 def center(win):
@@ -91,21 +88,25 @@ class Application(Frame):
         self.instr_bttn.bind("<Key-Return>", lambda x: self.tell_instr())
         self.instr_bttn.bind("<Up>", lambda x: self.about_bttn.focus())
         
-##        # Quit button
-##        self.quit_bttn = Button(self, text="QUIT", fg="red", command=self.grid.quit)
-##        self.quit_bttn.grid(row = 5, column = 1, sticky = W)
+        # Quit button
+        self.quit_bttn = Button(self,
+                                text="QUIT",
+                                fg="red",
+                                command=self.quit)
+        self.quit_bttn.grid(row = 8, column = 0, sticky = EW)
+        
 
     def save(self):
         # TODO: Create the function to save the game: maps, character, experience...
         """Stores the information of the map, position and the character to continue later"""
         filename = filedialog.asksaveasfilename()#save file
-        print(filename)
+##        print(filename)
         self.development()
 
     def open(self):
         """Loads the information of the saved file and uses to recreate that game."""
         filename = filedialog.askopenfilename() # open file
-        print(filename)
+##        print(filename)
         self.development()
 ##        dirname = filedialog.askdirectory() #where path or "" if cancel 
 
@@ -123,6 +124,7 @@ class Application(Frame):
 
     def tell_about(self):
         """Fill the box with some considerations about the game"""
+        
         about = """- This game was develop in Vienna, the course 2013-2014 as a"""\
                 """ way to learn Python.\n- It was initially an exercise of the book"""\
                 """'Python programming for the absolute beginner' but I modified it."""\
@@ -155,9 +157,10 @@ class Application(Frame):
         self.output_text.insert(0.0, history)
         self.output_text.configure(state=DISABLED)
 
+        
         self.label_text = StringVar()
+        self.label_input = Label(self, textvariable = self.label_text)
         self.label_text.set("What is your name?")
-        self.label_input = Label(self, text = self.label_text.get())
         self.label_input.grid(row = 3, column = 1)
         
         # Input text box
@@ -183,9 +186,10 @@ class Application(Frame):
                     if i != None:
                         i[0].grid_remove()
                 self.submit_bttn.grid_remove()
-
-    def game_name(self):
+                self.direction = ""
         
+    def game_name(self):
+        """Using the name of the character ask for the age"""
         # Function to check if there are numbers on it
         def contains_digits(d):
             digits = re.compile('\d')
@@ -200,11 +204,13 @@ class Application(Frame):
             adventure = "{} started to think about conquering the world and free"\
                         " it of the nasty creatures!\nAt the age of...".format(
                             self.name)
+            
+            self.label_input.configure(textvariable= self.label_text)
             self.label_text.set("When do you guess?")
-            self.label_input["text"]= self.label_text.get()
             self.output_text.configure(state='normal')
             self.output_text.insert(END, adventure)
             self.output_text.configure(state=DISABLED)
+        
 
     def game_age(self):
         """Check the age and start the direction buttons"""
@@ -240,10 +246,12 @@ class Application(Frame):
             self.direction.set(None)
             
             # Create buttons and asks about where do the user want to move.
-            self.text_direct = StringVar(self, name= "Where do you want to move?")
+            self.text_direct = StringVar()
+            
             self.label_direct = Label(self,
-                                      text=self.text_direct).grid(
+                                      textvariable=self.text_direct).grid(
                 row=3, column=1, sticky = W)
+            self.text_direct.set("Where do you want to move?")
             self.submit_bttn.grid(row = 5, column = 1, sticky = W)
             self.movement=0
             directions = ["North", "South", "West", "East", "Stay"]
@@ -266,7 +274,7 @@ class Application(Frame):
 
             self.winfo_toplevel().geometry("") # Resize the window
             self.buttons = True
-            
+                        
     def game_movement(self):
         """"""
         da = self.direction.get()
@@ -280,11 +288,10 @@ class Application(Frame):
             self.j+=1
         elif da.lower()=="west":
             self.j-=1
-        elif da.lower()==None:
-            showwarning("Caution!", "You didn't choose an option I supose you stayied where"\
-                        " you were")
-        else: # The user decided to stay
-             self.prota.health=100
+        elif da.lower()=="stay":
+            self.prota.health=100
+        else:
+            showwarning("Error", "Option not valid")
 
         # If it has reached the end of the map start over:
         if self.i == self.map1.positions.shape[1]:
@@ -336,22 +343,23 @@ class Application(Frame):
         self.prota.day+=1
         if self.prota.day//365==1:
             self.prota.day=0
-            self.prota.age+=1        
+            self.prota.age+=1
+        
                 
     def quit(self):
         """A summary of what have been done """
         if askyesno('Verify', 'Do you really want to quit?'):
-            frame.quit()
-##            print("\nDuring", self.prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
+            root.destroy()
+##            showinfo("During", self.prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
 ##                "He has now", self.prota.invent, "in her pocket or bag.\n\nI hope you have enjoied")
         else:
             pass # Keep playing
-##            print("You didn't decide a real option so I suppose you want to keep playing")
 
     def evaluate(self):
         """Given the entry starts the new function of the game."""
         global contents
         contents = self.input_text.get()
+##        print("Contents from input_text: {}".format(contents))
 ##        button.state(['disabled'])            ;# set the disabled flag, disabling the button
 ##        button.state(['!disabled'])           ;# clear the disabled flag
 ##        button.instate(['disabled'])          ;# return true if the button is disabled, else false
@@ -362,7 +370,13 @@ class Application(Frame):
         except AttributeError:
             pass
         else:
-            contents = self.direction.get() # The content is now with something
+            if self.direction.get() =="":
+                pass
+            else:
+                contents = self.direction.get()
+##            print("Contents from direction.get: {}".format(contents))
+
+
         
         if contents == '':
             message ="The value cannot be empty, please fill it with the right "\
@@ -376,13 +390,14 @@ class Application(Frame):
                 self.function -= 1
             eval(funct[self.function])
             self.function += 1
+##        print("Final contents passed: {}".format(contents))
 
 
     def development(self):
         """Prints alert saying it is still not working."""
         showwarning("Sorry", "This feature is still under development")
         
-    def __funct(self): # TODO: Improve it
+    def __funct(self): 
         """Finds the methods begining with game and prepare them for eval
 [to use in the evaluate function]"""
         fns = []
