@@ -10,6 +10,7 @@ from characters import *    # Import the characters definitions
 import numpy as np
 from tkinter import *
 from tkinter.messagebox import *
+from tkinter import filedialog
 import tkinter.scrolledtext as tkst
 from collections import defaultdict
 
@@ -99,11 +100,13 @@ class Application(Frame):
         """Stores the information of the map, position and the character to continue later"""
         filename = filedialog.asksaveasfilename()#save file
         print(filename)
+        self.development()
 
     def open(self):
         """Loads the information of the saved file and uses to recreate that game."""
         filename = filedialog.askopenfilename() # open file
         print(filename)
+        self.development()
 ##        dirname = filedialog.askdirectory() #where path or "" if cancel 
 
     def tell_instr(self):
