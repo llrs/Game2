@@ -159,8 +159,8 @@ class Application(Frame):
 
         
         self.label_text = StringVar()
-        self.label_input = Label(self, textvariable = self.label_text)
         self.label_text.set("What is your name?")
+        self.label_input = Label(self, textvariable = self.label_text)
         self.label_input.grid(row = 3, column = 1)
         
         # Input text box
@@ -236,22 +236,14 @@ class Application(Frame):
             self.map1=Maping()
             self.i=self.j=(self.map1.positions.shape[1]+1)/2
             
-        ##        self.fight="Do you want to fight?"
-        ##        self.fight2="Do you want to fight again?"
-            
             # Asks if he want to move
             self.input_text.grid_forget()
-            self.label_input.grid_forget()
             self.direction = StringVar()
             self.direction.set(None)
             
             # Create buttons and asks about where do the user want to move.
-            self.text_direct = StringVar()
-            
-            self.label_direct = Label(self,
-                                      textvariable=self.text_direct).grid(
-                row=3, column=1, sticky = W)
-            self.text_direct.set("Where do you want to move?")
+            self.label_input.configure(textvariable= self.label_text)
+            self.label_text.set("When do you guess?")
             self.submit_bttn.grid(row = 5, column = 1, sticky = W)
             self.movement=0
             directions = ["North", "South", "West", "East", "Stay"]
@@ -276,7 +268,7 @@ class Application(Frame):
             self.buttons = True
                         
     def game_movement(self):
-        """"""
+        """Moves the player in the map"""
         da = self.direction.get()
 
         # Change the position
@@ -304,7 +296,8 @@ class Application(Frame):
             self.j = self.map1.positions.shape[1]-1
 
         # TODO improve this for every direction and sea/lake if in the inventory there is no boat
-        # TODO set direction of fow for rivers, and just be able to cross some of them (the others are unable to cross them)
+        # TODO set direction of fow for rivers,
+        # and just be able to cross some of them (the others are unable to cross them)
 
         # If the new position is a high mountain then show you can't move further.
         if self.map1.places[self.i,self.j].place in ["mountain", "high mountain"]:
@@ -335,7 +328,7 @@ class Application(Frame):
 
             # Starts the battle againts the dark forces...
 ##        Battle(self.prota)
-##            a=Player("Manolo", i+1, j+1)
+##        a=Player("Manolo", self.i+1, self.j+1)
 ##            if i==a.i and j==a.j:
 ##                print(a)
 ##                a.trade(prota)
@@ -349,9 +342,11 @@ class Application(Frame):
     def quit(self):
         """A summary of what have been done """
         if askyesno('Verify', 'Do you really want to quit?'):
+            goodbye = "During {} days he has killed {} with {} hits."\
+                      " He has now {} in his pocket.\n\nI hope you enjoied".format(
+                          self.prota.day, Enemy.types, Hero.hits, self.prota.invent)
+            showinfo("Stats",goodbye)
             root.destroy()
-##            showinfo("During", self.prota.day, "days he has killed", Enemy.types, "with", Hero.hits, "hits",
-##                "He has now", self.prota.invent, "in her pocket or bag.\n\nI hope you have enjoied")
         else:
             pass # Keep playing
 
