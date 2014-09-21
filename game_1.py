@@ -44,8 +44,6 @@ class Application(Frame):
               ).grid(row = 0, column = 1)
         Label(self, text = "(SINGLE PLAYER MAP GAME)"
               ).grid(row = 1, column = 1)
-##        Label(self, text = "Please choose an option:"
-##              ).grid(row = 2, column = 0, sticky = W)
 
         # Button to start a new game
         self.play_bttn = Button(self, text = "Start a new game",
