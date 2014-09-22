@@ -5,10 +5,9 @@
 # So this is more like an RPG: SUR Single Untested RRGP ;)
 
 # Importing thins that must be in the same folder:
-from fight import *         # Import how the fight is done
+from fight import Battle         # Import how the fight is done
 from Place import *         # Import the map, and the generator
 from characters import *    # Import the characters definitions
-import numpy as np
 from tkinter import *
 from tkinter.messagebox import *
 from tkinter import filedialog
@@ -55,7 +54,6 @@ class Application(Frame):
         self.play_bttn.focus_set()
 
         # Button to load the saved game
-        # TODO: Create the option to load from a saved game
         self.load_bttn = Button(self, text = "Load a saved game",
                                 command = self.open)
         self.load_bttn.grid(row = 4, column =0, sticky = "ew")
@@ -92,7 +90,6 @@ class Application(Frame):
                                 fg="red",
                                 command=self.quit)
         self.quit_bttn.grid(row = 8, column = 0, sticky = EW)
-        
 
     def save(self):
         # TODO: Create the function to save the game: maps, character, experience...
@@ -138,6 +135,7 @@ class Application(Frame):
 
     def starter(self):
         """First function of the game, until it gets the name of the user"""
+        
         self.play_bttn.configure(text="Restart game")
         self.function = 0
 
@@ -149,13 +147,14 @@ class Application(Frame):
         self.output_text.bind("<Key-Return>", lambda x: self.evaluate())
         self.winfo_toplevel().geometry("") # Resize the window
         center(root) # Recenter the window, creates a strange effect ont the screen
+        self.output_text.bind('<MouseWheel>', self._mouse_wheel)
         
         history = "Our history begins far far away, when the dragons and goblins"\
                   " still dominated the Middle Earth.\nIn that time a man named...\n"
         self.output_text.insert(0.0, history)
         self.output_text.configure(state=DISABLED)
 
-        
+        # Label asking for the information
         self.label_text = StringVar()
         self.label_text.set("What is your name?")
         self.label_input = Label(self, textvariable = self.label_text)
@@ -173,7 +172,7 @@ class Application(Frame):
         self.submit_bttn.grid(row = 4, column = 2, sticky = W)
 
         # TODO: Delete the buttons and the submit button when Reset is pressed.
-        
+        # When the restart button is pressed then remove buttons and reset value
         if self.play_bttn['text']=="Restart game":
             try:
                 self.buttons
@@ -219,6 +218,9 @@ class Application(Frame):
             showwarning("Error", "Please introduce a number")
             self.input_text.focus()
         else:
+            if self.age > 100:
+                self.age = 100
+                
             self.output_text.configure(state='normal')
             story = "Yes, at the age of {} he began to fight against terrible"\
                     " creatures near their house.\nSo he got himself a wook sword"\
@@ -284,23 +286,24 @@ class Application(Frame):
             showwarning("Error", "Option not valid")
 
         # If it has reached the end of the map start over:
-        if self.i == self.map1.positions.shape[1]:
+        if self.i >= self.map1.positions.shape[1]:
             self.i = 0
-        elif self.i <0:
-            self.i = self.map1.positions.shape[1]-1
-        elif self.j == self.map1.positions.shape[1]:
+        elif self.i < 0:
+            self.i = self.map1.positions.shape[1] - 1
+            
+        if self.j >= self.map1.positions.shape[1]:
             self.j = 0
         elif self.j < 0:
-            self.j = self.map1.positions.shape[1]-1
+            self.j = self.map1.positions.shape[1] - 1 
 
         # TODO improve this for every direction and sea/lake if in the inventory there is no boat
         # TODO set direction of fow for rivers,
         # and just be able to cross some of them (the others are unable to cross them)
 
         # If the new position is a high mountain then show you can't move further.
-        if self.map1.places[self.i,self.j].place in ["mountain", "high mountain"]:
+        if self.map1.positions[self.i, self.j] in ["mountain", "high mountain"]:
             stop = "OH, a {} blocks my way. I should move around it.\n".format(
-                self.map1.places[self.i,self.j].place)
+                self.map1.positions[self.i,self.j])
             self.output_text.config(state='normal')
             self.output_text.insert(END, stop)
             self.output_text.config(state=DISABLED)
@@ -314,9 +317,21 @@ class Application(Frame):
                 self.j-=1
             elif da.lower()=="west":
                 self.j+=1
+
+            # Checking that the restoring is well done
+            if self.i >= self.map1.positions.shape[1]:
+                self.i = 0
+            elif self.i < 0:
+                self.i = self.map1.positions.shape[1] - 1
+                
+            if self.j >= self.map1.positions.shape[1]:
+                self.j = 0
+            elif self.j < 0:
+                self.j = self.map1.positions.shape[1] - 1
+            
         else:
             desc = "Ok, look what you see in the next zone: a {}\n".format(
-                self.map1.places[self.i,self.j].place)
+                self.map1.positions[self.i,self.j])
             desc2 = str(self.map1.places[self.i,self.j])+"\n"
             self.output_text.config(state='normal')
             self.output_text.insert(END, desc)
@@ -325,7 +340,7 @@ class Application(Frame):
         self.output_text.see(END)
 
             # Starts the battle againts the dark forces...
-##        Battle(self.prota)
+        Battle(self.prota)
 ##        a=Player("Manolo", self.i+1, self.j+1)
 ##            if i==a.i and j==a.j:
 ##                print(a)
@@ -368,14 +383,16 @@ class Application(Frame):
             else:
                 contents = self.direction.get()
 ##            print("Contents from direction.get: {}".format(contents))
-
-
-        
+        # check that the values are ok 
         if contents == '':
             message ="The value cannot be empty, please fill it with the right "\
                         "content"
             showwarning("Please fill the required elements", message)
             self.input_text.focus()
+            try:
+                self.input_text.focus()
+            except:
+                pass
         else:
             funct = self.__funct()
             self.input_text.delete(0, END)
@@ -384,7 +401,6 @@ class Application(Frame):
             eval(funct[self.function])
             self.function += 1
 ##        print("Final contents passed: {}".format(contents))
-
 
     def development(self):
         """Prints alert saying it is still not working."""
@@ -408,18 +424,19 @@ class Application(Frame):
             fns1.append("self.{}()".format(i))
         return(fns1)
     
-##    def _mouse_wheel(event):
-##        """A function to handle the mouse wheel rolling to bind with the
-##scroll bar"""
-##        # respond to Linux or Windows wheel event
-##        if event.num == 5 or event.delta == -120:
-##            count -= 1
-##        if event.num == 4 or event.delta == 120:
-##            count += 1
-##        return(-1*(count/120))
+    def _mouse_wheel(self, event):
+        """A function to handle the mouse wheel rolling to bind with the
+scroll bar"""
+        # respond to Linux or Windows wheel event
+        count = 0
+        if event.num == 5 or event.delta == -120:
+            count -= 1
+        if event.num == 4 or event.delta == 120:
+            count += 1
+        return(-1*(count/120))
         
 root = Tk()
-root.title("Game 2")
+root.title("Game")
 ##root.geometry("800x500")
 app = Application(root)
 center(root)
