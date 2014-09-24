@@ -18,10 +18,8 @@ class Hero(object):
 with the age calculates the damage he can do."""
         # Checking if the inputs are ok
         # Checking the name
-        if name=="":
-            print("Please introduce a valid name.")
-        elif name.isdigit()==True:# Check if it doesn't have numbers inside
-            print("Please introduce a valid name.")
+        if name=="" or name.isdigit()== True:
+            showwarning("Error","Please introduce a valid name, without numbers.")
         else:
             self.__name=name
             
@@ -45,17 +43,17 @@ with the age calculates the damage he can do."""
         # Checking the health
         if health<0:
             self.health=0
-            print("Health is turned to 0, you want to start alive or not?")
-        elif health>150:
+            showwarning("Health care", "Health is turned to 0, you want to start alive or not?")
+        elif health>100:
             self.health=100
-            print("You are a hero, but not a Greek goddness!\n"\
+            showwarning("Health care","You are a hero, but not a Greek goddness!\n"\
                   "Maximum health is now 100")
         else:
             self.health=health
             
         # Checking shield
         if shield<0:
-            print("Please introduce a valid shield.")
+            showwarning("Armery","Please introduce a valid shield.")
         else:
             self.__shield=shield
         
@@ -63,7 +61,7 @@ with the age calculates the damage he can do."""
         if enemy!="":
             self.__enemy=enemy
         else:
-            print("Please introduce a valid enemy")
+            showwarning("Enemy error","Please introduce a valid enemy")
         
         
         #This attributes are independent from the initializing.
@@ -79,11 +77,10 @@ with the age calculates the damage he can do."""
         return self.__stacenemy
     @enemy.setter
     def enemy(self, new_enemy):
-        if new_enemy=="":
-            print("H: I don't hate nor love.")
-        else:
+        if new_enemy!="":
             self.enemy = new_enemy
-            print("Enemy changed successfully! Now it is", self.enemy)
+            showwarning("Changed enemy",
+                        "Enemy changed successfully! Now it is {}".format(self.enemy))
     
     #Defining how to modify the name
     @property
@@ -92,22 +89,18 @@ with the age calculates the damage he can do."""
         return self.__name
     @name.setter
     def name(self, new_name): #Method
-        if new_name=="":
-            print("Ehh I should have a name.")
-        elif new_name.isdigit()==True:# Check if it has numbers.
-            print("Please introduce a valid name.")
+        if new_name=="" or new_name.isdigit()==True:# Check if it has numbers.
+            showwarning("Name incorrect","Please introduce a valid name.")
         else:
             self.__name = new_name
-            print("Name changed successfully!")
+            showwarning("Name changed","Now your name is {}!".format(new_name))
 
     # returns who he is
+    # TODO: check where and how it is used.
     def __str__(self):
         """Explains a little about herself"""
-        return("the hero "+self.__name+"!") #Used somewhere, check how it works
-    # Prints I am ready for the battle
-    def talk(self):
-        """Some sentences"""
-        print("H: I am ready for the battle")
+        return("the hero {} !".format(self.__name))
+    
     # Attack a enemy with damage
     def attack(self, enemy, damage):
         """Given an enemy attacks her with damage or a formula depending on the hero properties """
@@ -115,11 +108,13 @@ with the age calculates the damage he can do."""
         #This works fine stabilized about 80 damage*=((self.hits+1)/(self.day+1)+(1+self.hits)/(Hero.hits+1)+Hero.hits/100+Hero.hits/(self.day+self.hits+1))/3
         Hero.hits+=1
         if self.hits==0:
-            print(self.__name, "attacks our enemy", enemy.creature,
-                  ". Producing", truncate(damage), "points of damage")
+            attack = "{}, attacks our enemy {}. Producing {} points of damage.\n".format(self.__name, enemy.creature, truncate(damage))
+            self.output_text.configure(state='normal')
+            self.output_text.insert(END, attack)
+            self.output_text.configure(state=DISABLED)
             self.hits+=1
         else:
-            print(self.__name, "attacks again with", truncate(damage),"points")
+##            print(self.__name, "attacks again with", truncate(damage),"points")
             self.hits+=1
         enemy.damaged(damage)
         if enemy.life==0:
@@ -138,23 +133,31 @@ with the age calculates the damage he can do."""
         self.health-=damage
         if self.health<=0:
             self.health=0
-            print("H: I failed to become the conqueror of the world...")
+            defeat = "I failed to become the conqueror of the world..."
+            self.output_text.configure(state='normal')
+            self.output_text.insert(END, defeat)
+            self.output_text.configure(state=DISABLED)
         elif self.health<15:
-            print("H: Oh, no! I must protect myself. I am now just", self.health, "points of life.")
-        else:
-            print("H: HA! You almost miss this one.")
+            almost_dead = "H: Oh, no! I must protect myself. I am now just {} points of life.\n".format(self.helath)
+            self.output_text.configure(state='normal')
+            self.output_text.insert(END, almost_dead)
+            self.output_text.configure(state=DISABLED)
+            
+##        else:
+##            print("H: HA! You almost miss this one.")
 
     
     def inventory(self, name, quantity, pr=True):
         """If object was not there is added, if it was it is added, or if the quantity is lesser than 0 then it removes this quantity."""
         if pr==True:
             if quantity>0:
-                print("You found", quantity, name)
-                a=input("Do you want to add it to the inventory?\t")
+                found = "After defeating your enemy you found it had {} {}".format(quantity, name)
+                self.output_text.configure(state='normal')
+                self.output_text.insert(END, almost_dead)
+                self.output_text.configure(state=DISABLED)
+                self.input_text = "Do you want to add it to the inventory?"
             elif quantity<0:
-                a=input("Do you want give it away?\t")
-            else:
-                print("Sorry you can't add 0 item")
+                self.input_text = "Do you want to trade it?"
                 
             if a.lower()=='y' or a.lower()=='yes':
                 if name not in self.invent:
