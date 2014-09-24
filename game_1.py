@@ -232,7 +232,7 @@ class Application(Frame):
             self.output_text.insert(END, story)
             self.output_text.configure(state=DISABLED)
             # Creating features
-            self.prota=Hero(self.name, self.age)
+            self.prota=Hero(self.name, self.age, app=self)
             self.map1=Maping()
             self.i=self.j=(self.map1.positions.shape[1]+1)/2
             
@@ -340,7 +340,7 @@ class Application(Frame):
         self.output_text.see(END)
 
             # Starts the battle againts the dark forces...
-        Battle(self.prota)
+        Battle(self.prota, self)
 ##        a=Player("Manolo", self.i+1, self.j+1)
 ##            if i==a.i and j==a.j:
 ##                print(a)

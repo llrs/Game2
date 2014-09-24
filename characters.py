@@ -13,7 +13,7 @@ def truncate(x):
 class Hero(object):
     """Our hero, protagonist of the game"""
     hits=0
-    def __init__(self, name="Llopis", age=21, shield=0, health=100, enemy="You"):
+    def __init__(self, name="Llopis", age=21, shield=0, health=100, enemy="You", app="app"):
         """Initialice the object with name, age, shield, health, and enemy,
 with the age calculates the damage he can do."""
         # Checking if the inputs are ok
@@ -22,8 +22,8 @@ with the age calculates the damage he can do."""
             showwarning("Error","Please introduce a valid name, without numbers.")
         else:
             self.__name=name
-            
-        # Checking the age        
+
+        # Checking the age
         if age<1:
             showwarning("Very well!","With 0 years old began to walk around!")
             self.age = 0
@@ -37,9 +37,11 @@ with the age calculates the damage he can do."""
             self.age=100
         else:
             self.age=age
-            
+
         self.damage=-self.age*(self.age-100)/25
-                
+
+        self.app=app
+
         # Checking the health
         if health<0:
             self.health=0
@@ -50,26 +52,26 @@ with the age calculates the damage he can do."""
                   "Maximum health is now 100")
         else:
             self.health=health
-            
+
         # Checking shield
         if shield<0:
             showwarning("Armery","Please introduce a valid shield.")
         else:
             self.__shield=shield
-        
+
         # Other attributes
         if enemy!="":
             self.__enemy=enemy
         else:
             showwarning("Enemy error","Please introduce a valid enemy")
-        
-        
+
+
         #This attributes are independent from the initializing.
         self.kills=0
         self.hits=0
         self.invent={}
         self.day=1
-        
+
     #Defining how to modify the enemy
     @property
     def enemy(self):
@@ -81,7 +83,7 @@ with the age calculates the damage he can do."""
             self.enemy = new_enemy
             showwarning("Changed enemy",
                         "Enemy changed successfully! Now it is {}".format(self.enemy))
-    
+
     #Defining how to modify the name
     @property
     def name(self):
@@ -100,29 +102,29 @@ with the age calculates the damage he can do."""
     def __str__(self):
         """Explains a little about herself"""
         return("the hero {} !".format(self.__name))
-    
+
     # Attack a enemy with damage
-    def attack(self, enemy, damage):
+    def attack(self, enemy, damage, app):
         """Given an enemy attacks her with damage or a formula depending on the hero properties """
         damage*=((self.hits+1)/(self.day+1)+(1+self.hits)/(Hero.hits+1)+Hero.hits/100+Hero.hits/(self.day+self.hits+1)+(1+self.kills)/(1+Hero.hits))/3
         #This works fine stabilized about 80 damage*=((self.hits+1)/(self.day+1)+(1+self.hits)/(Hero.hits+1)+Hero.hits/100+Hero.hits/(self.day+self.hits+1))/3
         Hero.hits+=1
         if self.hits==0:
             attack = "{}, attacks our enemy {}. Producing {} points of damage.\n".format(self.__name, enemy.creature, truncate(damage))
-            self.output_text.configure(state='normal')
-            self.output_text.insert(END, attack)
-            self.output_text.configure(state=DISABLED)
+            app.output_text.configure(state='normal')
+            app.output_text.insert("end", attack)
+            app.output_text.configure(state="disabled")
             self.hits+=1
         else:
 ##            print(self.__name, "attacks again with", truncate(damage),"points")
             self.hits+=1
-        enemy.damaged(damage)
+        enemy.damaged(damage, app)
         if enemy.life==0:
             self.kills+=1
             self.hits=0
 
     #Defining what happens when hitted
-    def damaged(self, damage):
+    def damaged(self, damage, app):
         """Recieve the damage, if there is defense or shield he receives less damage."""
         if self.__shield>0:
             damage-=self.__shield
@@ -134,31 +136,31 @@ with the age calculates the damage he can do."""
         if self.health<=0:
             self.health=0
             defeat = "I failed to become the conqueror of the world..."
-            self.output_text.configure(state='normal')
-            self.output_text.insert(END, defeat)
-            self.output_text.configure(state=DISABLED)
+            app.output_text.configure(state='normal')
+            app.output_text.insert("end", defeat)
+            app.output_text.configure(state="disabled")
         elif self.health<15:
             almost_dead = "H: Oh, no! I must protect myself. I am now just {} points of life.\n".format(self.helath)
-            self.output_text.configure(state='normal')
-            self.output_text.insert(END, almost_dead)
-            self.output_text.configure(state=DISABLED)
-            
+            app.output_text.configure(state='normal')
+            app.output_text.insert("end", almost_dead)
+            app.output_text.configure(state="disabled")
+
 ##        else:
 ##            print("H: HA! You almost miss this one.")
 
-    
-    def inventory(self, name, quantity, pr=True):
+
+    def inventory(self, name, quantity, app, pr=True):
         """If object was not there is added, if it was it is added, or if the quantity is lesser than 0 then it removes this quantity."""
         if pr==True:
             if quantity>0:
                 found = "After defeating your enemy you found it had {} {}".format(quantity, name)
-                self.output_text.configure(state='normal')
-                self.output_text.insert(END, almost_dead)
-                self.output_text.configure(state=DISABLED)
+                app.output_text.configure(state='normal')
+                app.output_text.insert("end", almost_dead)
+                app.output_text.configure(state="disabled")
                 self.input_text = "Do you want to add it to the inventory?"
             elif quantity<0:
-                self.input_text = "Do you want to trade it?"
-                
+                app.input_text = "Do you want to trade it?"
+
             if a.lower()=='y' or a.lower()=='yes':
                 if name not in self.invent:
                     self.invent[name]= quantity
@@ -174,7 +176,7 @@ with the age calculates the damage he can do."""
                 self.invent[name]+=quantity
         elif pr!=True or pr!=False:
             print("The parameter pr should be True or False")
-            
+
     def trade(self):
         """Let you decide which prices do you sell the objects of the intentary"""
         self.sell={}
@@ -190,10 +192,10 @@ with the age calculates the damage he can do."""
             except:
                 print("You didn't set a price or say anything not to sell it. I didn't understand what do you want...")
         print("You sell the the following elements at this price:\n", self.sell)
-            
-        
-            
-        
+
+
+
+
 
 # Defining a neutral AI
 class Player(Hero):
@@ -220,13 +222,13 @@ class Player(Hero):
             print("Please introduce a valid name.")
         else:
             self.__name = new_name
-        
+
 
     def talk(self):
         """A minimal talk, the object 'presents' itself"""
         a= "Hi I am "+self.name
         return a
-    
+
     def inventory_generator(self):
         """Creates a random inventory for the player"""
         import random as rdm
@@ -248,13 +250,13 @@ class Player(Hero):
         print("Do you want to buy or sell something?\nHere are my offers:")
         print("""I sell each item for the following price:\nItem         trade
 -------------------/""")
-        for key in player.invent.keys():            
+        for key in player.invent.keys():
             if key in self.invent.keys():
                 self.sell[key]=truncate(1/player.invent[key]+r1)
                 print(key, "at", self.sell[key])
             else:
                 print(key, "     ---")
-        
+
         print("If you want to sell me something, I wait to know what you offer before saying anything else")
         player.trade()
         print("Well, maybe we can arrange some kind of deal...")
@@ -265,7 +267,7 @@ class Player(Hero):
                     a=int(input(offer))
                 except ValueError:
                     a=int(input("Sorry I didn't understand you. How many?"))
-                    
+
                 if player.invent[item]>a:
                     player.invent[item]-=a
                     self.invent[item]+=a
@@ -274,7 +276,7 @@ class Player(Hero):
                     self.invent[item]+=player.invent[item]
                     player.invent[item]=0
         print("Now you have", player.invent)
-                    
+
 # Defining enemy type
 class Enemy(object):
     """Defines Enemy!!"""
@@ -297,19 +299,19 @@ class Enemy(object):
             else:
                 Enemy.types[creature]+=1
             Enemy.types_total=len(Enemy.types)
-                
+
         # Checking the life
         if life<0:
             self.life=0
         else:
             self.life=life
-            
+
         # Checking defense
         if defense<0:
             print("Please introduce a valid defense.")
         else:
             self.__defense = defense
-            
+
         # Checking the enemy
         if enemy=="":
             print("Please introduce a valid enemy.")
@@ -317,7 +319,7 @@ class Enemy(object):
             print("Please introduce a valid enemy.")
         else:
             self.enemy=enemy
-            
+
         self.damage=damage
         self.hits=0
         Enemy.total+=1
@@ -328,40 +330,56 @@ class Enemy(object):
         return("A ancient and unbelivable creature")
 
     #Defining when it attacks
-    def attack(self, enemy, damage):
+    def attack(self, enemy, damage, app):
         """Given an enemy, attacks her with damage"""
         if damage==None or damage==0:
-            print("Pleas if you want to attack, do it!")
+            fail = "PLEASE if you want to attack, do it!"
+            app.output_text.configure(state='normal')
+            app.output_text.insert("end", fail)
+            app.output_text.configure(state="disabled")
         else:
             self.damage=damage
             self.enemy=enemy
         self.hits+=1
         if self.hits==1:
             if (Enemy.total+1)%3!=0:
-                print(self.creature, "attacks back", self.enemy, "Producing", self.damage, "points of damage")
+                back= "{} attacks back {}. Producing {} points of damage".format(
+                    self.creature, self.enemy, self.damage)
+                app.output_text.configure(state='normal')
+                app.output_text.insert("end", back)
+                app.output_text.configure(state="disabled")
             else:
-                print(self.creature, "attacks again!")
+                back = "{} attacks again!".format(self.creature)
+                app.output_text.configure(state='normal')
+                app.output_text.insert("end", back)
+                app.output_text.configure(state="disabled")
         else:
-            print("E: GRHHH")
-        self.enemy.damaged(self.damage)
+            app.output_text.configure(state='normal')
+            app.output_text.insert("end", "GRRRR!")
+            app.output_text.configure(state="disabled")
+        self.enemy.damaged(self.damage, app)
 
     #Defining when it is hit
-    def damaged(self, damage):
+    def damaged(self, damage, app):
         """Recieve the damage of an attack, if there is some defense, then it receives less"""
         if self.__defense>0:
             damage-=self.__defense
         self.life-=damage
         if self.life<=0:
-            print("E: AHHH, a miserable human has killed me!")
+            dead ="AHHH, a miserable human has killed me!"
+            app.output_text.configure(state='normal')
+            app.output_text.insert("end", dead)
+            app.output_text.configure(state="disabled")
             self.life=0
         else:
-            print("E: I've enoughg life to kill you stpuid.")
-            
+            app.output_text.configure(state='normal')
+            app.output_text.insert("end", "I've enoughg life to kill you stpuid.")
+            app.output_text.configure(state="disabled")
 
 #def weighted_choice(choices):
 #    """Get a list of nested list
 #    Where the second one is the probability and the first value of the lested list is the output"""
-#    
+#
 #    total = sum(w for c, w in choices)
 #    r = random.uniform(0, total)
 #    upto = 0
