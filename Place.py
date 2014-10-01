@@ -1,6 +1,8 @@
 # This file defines how it is defined each place and the map
 #ADD to place: Images, boarders, night, scenario, events
 #Defining where it takes action the game outside rooms...
+import warnings
+
 class Place(object):
     """Where is the action"""
     possible_places=("cave","abandoned house", "castle", "river", "forest", "house", 
@@ -14,14 +16,14 @@ class Place(object):
         elif place in Place.possible_places:
             self.place=place
         else:
-            print("Please introduce a valid place!")
+            warnings.warn("Please introduce a valid place!")
 
         if weather=="":
             self.weather=random.choice(Place.possible_weather)
         elif weather in Place.possible_weather:
             self.weather=weather
         else:
-            print("Please introduce a valid weather!")
+            warnings.warn("Please introduce a valid weather!")
         
     def __str__(self):
         #Defining cave
@@ -245,7 +247,7 @@ class Maping(object):
         #it implies a minimum of 3
         import numpy as np
         while large<4:
-            print("Please introduce a valid number greater than 3.")
+            warnings.warn("Please introduce a valid number greater than 3.")
             try:
                 large=int(input("How wide and large should the map be?\t"))
             except ValueError:

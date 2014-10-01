@@ -137,7 +137,7 @@ with the age calculates the damage he can do."""
             self.health=0
             defeat = "I failed to become the conqueror of the world..."
             app.output_text.configure(state='normal')
-            app.output_text.insert("end", defeat, fg="blue")
+            app.output_text.insert("end", defeat)
             app.output_text.configure(state="disabled")
         elif self.health<15:
             almost_dead = "Oh, no! I must protect myself. I am now just {} points of life.\n".format(self.helath)
