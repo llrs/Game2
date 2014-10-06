@@ -22,17 +22,17 @@ def fight(prota, enemy, app):
             death = "{} has been killed!!".format(enemy.creature)
             
             if enemy.creature=='Nazgul':
-                prota.inventory('shield',1)
+                prota.inventory('shield',1, app)
             elif enemy.creature=='Stephan the Emperor':
-                prota.inventory('iron shield',1)
+                prota.inventory('iron shield',1, app)
 
         else:
             enemy.attack(prota, enemy.damage, app)
             if prota.health<=0:
-                death= "Unfortunatelly {}was killed while attacking the creature"\
-                       " number {}".format(prota.name, enemy.total)
-                Enemy.types[enemy.creature]-=1
-                summary = "In his sucessfully life he has killed: {}".format(Enemy.types)
+##                death= "Unfortunatelly {}was killed while attacking the creature"\
+##                       " number {}".format(prota.name, enemy.total)
+##                Enemy.types[enemy.creature]-=1
+##                summary = "In his sucessfully life he has killed: {}".format(Enemy.types)
                 break
 
 # Creates the event of the figth in a situation.

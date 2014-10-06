@@ -81,6 +81,7 @@ class CustomText(tkst.ScrolledText):
                 self.mark_set("matchEnd", "%s+%sc" % (index,count.get()))
                 self.tag_add(color, "matchStart","matchEnd")
             self.configure(state=DISABLED)
+            self.see(END)
 
 # The app of the game
 class Application(Frame):
@@ -412,13 +413,23 @@ class Application(Frame):
     def quit(self):
         """A summary of what have been done """
         if askyesno('Verify', 'Do you really want to quit?'):
-            goodbye = "During {} days he has killed {} with {} hits."\
-                      " He has now {} in his pocket.\n\nI hope you enjoied".format(
-                          self.prota.day, Enemy.types, Hero.hits, self.prota.invent)
+            if self.prota.health == 0:
+                goodbye = "The hero died while serving other people"
+            else:
+                goodbye = "During {} days he has killed {} with {} hits."\
+                          " He has now {} in his pocket.\n\nI hope you"\
+                          " enjoied.".format(self.prota.day, Enemy.types,
+                                            Hero.hits, self.prota.invent)
             showinfo("Stats",goodbye)
             root.destroy()
-        else:
-            pass # Keep playing
+        elif self.prota.health == 0:
+            #TODO: Restart the counter of the functions and disable the buttons
+            # One should read the history he made.
+            funct = self.__funct()
+            self.input_text.delete(0, END)
+            self.function = 0
+            eval(funct[self.function])
+            self.function += 1
 
     def evaluate(self):
         """Given the entry starts the new function of the game."""
@@ -439,7 +450,6 @@ class Application(Frame):
                 pass
             else:
                 contents = self.direction.get()
-##            print("Contents from direction.get: {}".format(contents))
         # check that the values are ok 
         if contents == '':
             message ="The value cannot be empty, please fill it with the right "\
@@ -457,7 +467,7 @@ class Application(Frame):
                 self.function -= 1
             eval(funct[self.function])
             self.function += 1
-##        print("Final contents passed: {}".format(contents))
+
 
     def development(self):
         """Prints alert saying it is still not working."""
@@ -491,10 +501,11 @@ scroll bar"""
         if event.num == 4 or event.delta == 120:
             count += 1
         return(-1*(count/120))
-        
-root = Tk()
-root.title("Game")
-##root.geometry("800x500")
-app = Application(root)
-center(root)
-root.mainloop()
+    
+if __name__ == '__main__':
+    root = Tk()
+    root.title("Game")
+    ##root.geometry("800x500")
+    app = Application(root)
+    center(root)
+    root.mainloop()

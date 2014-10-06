@@ -4,6 +4,7 @@
 
 from tkinter.messagebox import *
 
+
 # Random things
 def truncate(x):
     bdot, adot = str(x).split('.')
@@ -110,10 +111,12 @@ with the age calculates the damage he can do."""
         #This works fine stabilized about 80 damage*=((self.hits+1)/(self.day+1)+(1+self.hits)/(Hero.hits+1)+Hero.hits/100+Hero.hits/(self.day+self.hits+1))/3
         Hero.hits+=1
         if self.hits==0:
-            attack = "{}, attacks our enemy {}. Producing {} points of damage.\n".format(self.__name, enemy.creature, truncate(damage))
-            app.output_text.configure(state='normal')
-            app.output_text.insert("end", attack)
-            app.output_text.configure(state="disabled")
+            attack = "{}, attacks our enemy {}. Producing {} points of damage."\
+                     "\n".format(self.__name, enemy.creature, truncate(damage))
+##            app.output_text.configure(state='normal')
+##            app.output_text.insert("end", attack)
+##            app.output_text.configure(state="disabled")
+            app.output_text.highlight(attack, enemy.creature, "red")
             self.hits+=1
         else:
 ##            print(self.__name, "attacks again with", truncate(damage),"points")
@@ -135,15 +138,19 @@ with the age calculates the damage he can do."""
         self.health-=damage
         if self.health<=0:
             self.health=0
-            defeat = "I failed to become the conqueror of the world..."
-            app.output_text.configure(state='normal')
-            app.output_text.insert("end", defeat)
-            app.output_text.configure(state="disabled")
+            defeat = "I failed to become the conqueror of the world...\n"
+            app.output_text.highlight(defeat, defeat, "red")
+##            app.output_text.configure(state='normal')
+##            app.output_text.insert("end", defeat)
+##            app.output_text.configure(state="disabled")
+            app.quit()
         elif self.health<15:
-            almost_dead = "Oh, no! I must protect myself. I am now just {} points of life.\n".format(self.helath)
-            app.output_text.configure(state='normal')
-            app.output_text.insert("end", almost_dead, fg="blue")
-            app.output_text.configure(state="disabled")
+            almost_dead = "Oh, no! I must protect myself. I am now just {} "\
+                          "points of life.\n".format(self.health)
+            app.output_text.highlight(almost_dead, self.health, "pink")
+##            app.output_text.configure(state='normal')
+##            app.output_text.insert("end", almost_dead, fg="blue")
+##            app.output_text.configure(state="disabled")
 
 ##        else:
 ##            print("H: HA! You almost miss this one.")
@@ -153,7 +160,8 @@ with the age calculates the damage he can do."""
         """If object was not there is added, if it was it is added, or if the quantity is lesser than 0 then it removes this quantity."""
         if pr==True:
             if quantity>0:
-                found = "After defeating your enemy you found it had {} {}".format(quantity, name)
+                found = "After defeating your enemy you found it had {}"\
+                                      " {}".format(quantity, name)
                 app.output_text.configure(state='normal')
                 app.output_text.insert("end", almost_dead)
                 app.output_text.configure(state="disabled")
@@ -168,7 +176,10 @@ with the age calculates the damage he can do."""
                     self.invent[name]+=quantity
             else:
                 print("You canceled the action")
-            print("Now your inventory is", self.invent)
+            status= "Now your inventory is {}\n".format(self.invent)
+            app.output_text.configure(state='normal')
+            app.output_text.insert("end", status)
+            app.output_text.configure(state="disabled")
         elif pr==False:
             if name not in self.invent:
                 self.invent[name]= quantity
@@ -192,10 +203,6 @@ with the age calculates the damage he can do."""
             except:
                 print("You didn't set a price or say anything not to sell it. I didn't understand what do you want...")
         print("You sell the the following elements at this price:\n", self.sell)
-
-
-
-
 
 # Defining a neutral AI
 class Player(Hero):
@@ -333,7 +340,7 @@ class Enemy(object):
     def attack(self, enemy, damage, app):
         """Given an enemy, attacks her with damage"""
         if damage==None or damage==0:
-            fail = "PLEASE if you want to attack, do it!"
+            fail = "PLEASE if you want to attack, do it!\n"
             app.output_text.configure(state='normal')
             app.output_text.insert("end", fail)
             app.output_text.configure(state="disabled")
@@ -343,13 +350,14 @@ class Enemy(object):
         self.hits+=1
         if self.hits==1:
             if (Enemy.total+1)%3!=0:
-                back= "{} attacks back {}. Producing {} points of damage".format(
+                back= "{} attacks back {}. "\
+                      "Producing {} points of damage.\n".format(
                     self.creature, self.enemy, self.damage)
                 app.output_text.configure(state='normal')
                 app.output_text.insert("end", back)
                 app.output_text.configure(state="disabled")
             else:
-                back = "{} attacks again!".format(self.creature)
+                back = "{} attacks again!\n".format(self.creature)
                 app.output_text.configure(state='normal')
                 app.output_text.insert("end", back)
                 app.output_text.configure(state="disabled")
@@ -366,14 +374,14 @@ class Enemy(object):
             damage-=self.__defense
         self.life-=damage
         if self.life<=0:
-            dead ="AHHH, a miserable human has killed me!"
+            dead ="AHHH, a miserable human has killed me!\n"
             app.output_text.configure(state='normal')
             app.output_text.insert("end", dead)
             app.output_text.configure(state="disabled")
             self.life=0
         else:
             app.output_text.configure(state='normal')
-            app.output_text.insert("end", "I've enoughg life to kill you stpuid.")
+            app.output_text.insert("end", "I've enoughg life to kill you stpuid.\n")
             app.output_text.configure(state="disabled")
 
 #def weighted_choice(choices):
