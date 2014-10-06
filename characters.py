@@ -34,7 +34,7 @@ with the age calculates the damage he can do."""
         elif age>100:
             showwarning("Ups","You don't begin to fight with more than 100"\
                                "years unless you are an elf.\n Are you really"\
-                               " an elf??!\nYour age is corrected to 100")
+                               " an elf??!\nYour age is corrected to 100.")
             self.age=100
         else:
             self.age=age
@@ -61,8 +61,8 @@ with the age calculates the damage he can do."""
             self.__shield=shield
 
         # Other attributes
-        if enemy!="":
-            self.__enemy=enemy
+        if enemy != "":
+            self.__enemy = enemy
         else:
             showwarning("Enemy error","Please introduce a valid enemy")
 
@@ -80,7 +80,7 @@ with the age calculates the damage he can do."""
         return self.__stacenemy
     @enemy.setter
     def enemy(self, new_enemy):
-        if new_enemy!="":
+        if new_enemy != "":
             self.enemy = new_enemy
             showwarning("Changed enemy",
                         "Enemy changed successfully! Now it is {}".format(self.enemy))
@@ -375,36 +375,12 @@ class Enemy(object):
         self.life-=damage
         if self.life<=0:
             dead ="AHHH, a miserable human has killed me!\n"
-            app.output_text.configure(state='normal')
-            app.output_text.insert("end", dead)
-            app.output_text.configure(state="disabled")
+##            app.output_text.configure(state='normal')
+##            app.output_text.insert("end", dead)
+##            app.output_text.configure(state="disabled")
+            app.output_text.highlight(dead, dead, "pink")
             self.life=0
         else:
             app.output_text.configure(state='normal')
             app.output_text.insert("end", "I've enoughg life to kill you stpuid.\n")
             app.output_text.configure(state="disabled")
-
-#def weighted_choice(choices):
-#    """Get a list of nested list
-#    Where the second one is the probability and the first value of the lested list is the output"""
-#
-#    total = sum(w for c, w in choices)
-#    r = random.uniform(0, total)
-#    upto = 0
-#    for c, w in choices:
-#        if upto + w > r:
-#            return c
-#        upto += w
-#    assert False, "Shouldn't get here"
-
-#def choice_weighted(choices, weights):
-#    """From al list of choices of weights `weights` selects one according to weights"""
-#    import random
-#    total=sum(weights)
-#    r=random.uniform(0, total)
-#    upto=0
-#    for w in weights and c in choices:
-#        if upto+w>r:
-#            return c
-#        upto+=w
-#    assert False, "Shouldn't get here"
