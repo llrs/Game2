@@ -2,7 +2,6 @@
 #Game version 1
 #  Llopis 15/01/2014
 # This is some kind of MUD game, but not multiplayer and not in dungeons :D
-# So this is more like an RPG: SUR Single Untested RRGP ;)
 
 # Importing thins that must be in the same folder:
 from fight import Battle         # Import how the fight is done
@@ -30,6 +29,58 @@ def center(win):
     if win.attributes('-alpha') == 0:
         win.attributes('-alpha', 1.0)
     win.deiconify()
+    
+class CustomText(tkst.ScrolledText):
+    '''A text widget with a new method, HighlightPattern 
+
+    example:
+
+    text = CustomText()
+    text.HighlightPattern("this should be red", "red")
+
+    The highlight_pattern method is a simplified python 
+    version of the tcl code at http://wiki.tcl.tk/3246
+    '''
+    def __init__(self, *args, **kwargs):
+        import tkinter as tk
+        tk.Text.__init__(self, *args, **kwargs)
+
+    def highlight(self, text, patterns, color, start="1.0", end="end", regexp=False):
+        '''Apply the given tag to all text that matches the given pattern
+
+        If 'regexp' is set to True, pattern will be treated as a regular expression
+        '''
+        import tkinter as tk
+        self.tag_config(color, foreground = color)
+        start = self.index(start)
+        end = self.index(end)
+        self.mark_set("matchStart",start)
+        self.mark_set("matchEnd",start)
+        self.mark_set("searchLimit", end)
+        self.configure(state='normal')
+        self.insert(END, text)
+        
+        if isinstance(patterns, list) or isinstance(patterns, tuple):
+            for pattern in patterns:
+                count = tk.IntVar()
+                while True:
+                    index = self.search(pattern, "matchEnd","searchLimit",
+                                        count=count, regexp=regexp)
+                    if index == "": break
+                    self.mark_set("matchStart", index)
+                    self.mark_set("matchEnd", "%s+%sc" % (index,count.get()))
+                    self.tag_add(color, "matchStart","matchEnd")
+                self.configure(state=DISABLED)
+        else:
+            count = tk.IntVar()
+            while True:
+                index = self.search(patterns, "matchEnd","searchLimit",
+                                    count=count, regexp=regexp)
+                if index == "": break
+                self.mark_set("matchStart", index)
+                self.mark_set("matchEnd", "%s+%sc" % (index,count.get()))
+                self.tag_add(color, "matchStart","matchEnd")
+            self.configure(state=DISABLED)
 
 # The app of the game
 class Application(Frame):
@@ -140,7 +191,7 @@ class Application(Frame):
         self.function = 0
 
         # Output text box
-        self.output_text = tkst.ScrolledText(self, width = 100, height = 20,
+        self.output_text = CustomText(self, width = 100, height = 20,
                                 wrap = WORD, bd=0)
         self.output_text.grid(row = 9, column = 0, columnspan = 5, sticky="nsew")
         self.output_text.bind("<Enter>", lambda x: self.output_text.focus())
@@ -199,14 +250,18 @@ class Application(Frame):
         else:
             self.name = contents
             adventure = "{} started to think about conquering the world and free"\
-                        " it of the nasty creatures!\nAt the age of...".format(
+                        " it of the nasty creatures!\nAt the age of...\n".format(
                             self.name)
-            
+
             self.label_input.configure(textvariable= self.label_text)
             self.label_text.set("When do you guess?")
-            self.output_text.configure(state='normal')
-            self.output_text.insert(END, adventure)
-            self.output_text.configure(state=DISABLED)
+
+            
+            # make a tag for change the color.
+            self.output_text.highlight(adventure, self.name, "blue")
+##            self.output_text.configure(state="normal")
+##            self.output_text.insert(END, adventure)
+##            self.output_text.configure(state=DISABLED)
         
 
     def game_age(self):
@@ -217,7 +272,7 @@ class Application(Frame):
             self.function -= 1
             showwarning("Error", "Please introduce a number")
             self.input_text.focus()
-        else:
+        finally:
             if self.age > 100:
                 self.age = 100
                 
@@ -304,9 +359,10 @@ class Application(Frame):
         if self.map1.positions[self.i, self.j] in ["mountain", "high mountain"]:
             stop = "OH, a {} blocks my way. I should move around it.\n".format(
                 self.map1.positions[self.i,self.j])
-            self.output_text.config(state='normal')
-            self.output_text.insert(END, stop)
-            self.output_text.config(state=DISABLED)
+            self.output_text.highlight(stop, self.map1.positions[self.i,self.j], "green")
+##            self.output_text.config(state='normal')
+##            self.output_text.insert(END, stop)
+##            self.output_text.config(state=DISABLED)
             
             # Restoring the position 
             if da.lower()=='north':
@@ -332,9 +388,10 @@ class Application(Frame):
         else:
             desc = "Ok, look what you see in the next zone: a {}\n".format(
                 self.map1.positions[self.i,self.j])
+            self.output_text.highlight(desc, self.map1.positions[self.i,self.j], "green")
             desc2 = str(self.map1.places[self.i,self.j])+"\n"
             self.output_text.config(state='normal')
-            self.output_text.insert(END, desc)
+##            self.output_text.insert(END,desc)
             self.output_text.insert(END,desc2)
             self.output_text.config(state=DISABLED)
         self.output_text.see(END)
