@@ -12,7 +12,7 @@ from tkinter.messagebox import *
 from tkinter import filedialog
 import tkinter.scrolledtext as tkst
 from collections import defaultdict
-from helpfunction import * # Center windows, scrolledtext with highlight function
+from helpfunctions import * # Center windows, scrolledtext with highlight function
 
 
 # The app of the game
@@ -67,7 +67,7 @@ class Application(Frame):
         self.instr_bttn.grid(row = 7, column =0, sticky = "ew")
         self.instr_bttn.bind("<Key-Return>", lambda x: self.tell_instr())
         self.instr_bttn.bind("<Up>", lambda x: self.about_bttn.focus())
-        
+
         # Quit button
         self.quit_bttn = Button(self,
                                 text="QUIT",
@@ -87,7 +87,7 @@ class Application(Frame):
         filename = filedialog.askopenfilename() # open file
 ##        print(filename)
         self.development()
-##        dirname = filedialog.askdirectory() #where path or "" if cancel 
+##        dirname = filedialog.askdirectory() #where path or "" if cancel
 
     def tell_instr(self):
         """ Fill text box with instructions"""
@@ -103,7 +103,7 @@ class Application(Frame):
 
     def tell_about(self):
         """Fill the box with some considerations about the game"""
-        
+
         about = """- This game was develop in Vienna, the course 2013-2014 as a"""\
                 """ way to learn Python.\n- It was initially an exercise of the book"""\
                 """'Python programming for the absolute beginner' but I modified it."""\
@@ -119,7 +119,7 @@ class Application(Frame):
 
     def starter(self):
         """First function of the game, until it gets the name of the user"""
-        
+
         self.play_bttn.configure(text="Restart game")
         self.function = 0
 
@@ -132,7 +132,7 @@ class Application(Frame):
         self.winfo_toplevel().geometry("") # Resize the window
         center(root) # Recenter the window, creates a strange effect ont the screen
         self.output_text.bind('<MouseWheel>', self._mouse_wheel)
-        
+
         history = "Our history begins far far away, when the dragons and goblins"\
                   " still dominated the Middle Earth.\nIn that time a man named...\n"
         self.output_text.insert(0.0, history)
@@ -143,13 +143,13 @@ class Application(Frame):
         self.label_text.set("What is your name?")
         self.label_input = Label(self, textvariable = self.label_text)
         self.label_input.grid(row = 3, column = 1)
-        
+
         # Input text box
         self.input_text = Entry(self)
         self.input_text.grid(row = 3, column = 2, sticky = W)
         self.input_text.bind("<Key-Return>", lambda x: self.evaluate())
         self.input_text.focus_set()
-        
+
         # Submit button
         # TODO: Change the input so that will do something
         self.submit_bttn = Button(self, text = "Submit", command = self.evaluate)
@@ -168,7 +168,7 @@ class Application(Frame):
                         i[0].grid_remove()
                 self.submit_bttn.grid_remove()
                 self.direction = ""
-        
+
     def game_name(self):
         """Using the name of the character ask for the age"""
         # Function to check if there are numbers on it
@@ -189,13 +189,13 @@ class Application(Frame):
             self.label_input.configure(textvariable= self.label_text)
             self.label_text.set("When do you guess?")
 
-            
+
             # make a tag for change the color.
             self.output_text.highlight(adventure, self.name, "blue")
 ##            self.output_text.configure(state="normal")
 ##            self.output_text.insert(END, adventure)
 ##            self.output_text.configure(state=DISABLED)
-        
+
 
     def game_age(self):
         """Check the age and start the direction buttons"""
@@ -208,7 +208,7 @@ class Application(Frame):
         finally:
             if self.age > 100:
                 self.age = 100
-                
+
             self.output_text.configure(state='normal')
             story = "Yes, at the age of {} he began to fight against terrible"\
                     " creatures near their house.\nSo he got himself a wook sword"\
@@ -223,12 +223,12 @@ class Application(Frame):
             self.prota=Hero(self.name, self.age, app=self)
             self.map1=Maping()
             self.i=self.j=(self.map1.positions.shape[1]+1)/2
-            
+
             # Asks if he want to move
             self.input_text.grid_forget()
             self.direction = StringVar()
             self.direction.set(None)
-            
+
             # Create buttons and asks about where do the user want to move.
             self.label_input.configure(textvariable= self.label_text)
             self.label_text.set("When do you guess?")
@@ -238,7 +238,7 @@ class Application(Frame):
             column = 1
 
             self.mybuttons = defaultdict(list)
-                
+
             for direction in directions:
                 self.mybuttons[column].append(
                     Radiobutton(self,
@@ -254,7 +254,7 @@ class Application(Frame):
 
             self.winfo_toplevel().geometry("") # Resize the window
             self.buttons = True
-                        
+
     def game_movement(self):
         """Moves the player in the map"""
         da = self.direction.get()
@@ -278,11 +278,11 @@ class Application(Frame):
             self.i = 0
         elif self.i < 0:
             self.i = self.map1.positions.shape[1] - 1
-            
+
         if self.j >= self.map1.positions.shape[1]:
             self.j = 0
         elif self.j < 0:
-            self.j = self.map1.positions.shape[1] - 1 
+            self.j = self.map1.positions.shape[1] - 1
 
         # TODO improve this for every direction and sea/lake if in the inventory there is no boat
         # TODO set direction of fow for rivers,
@@ -296,8 +296,8 @@ class Application(Frame):
 ##            self.output_text.config(state='normal')
 ##            self.output_text.insert(END, stop)
 ##            self.output_text.config(state=DISABLED)
-            
-            # Restoring the position 
+
+            # Restoring the position
             if da.lower()=='north':
                 self.i-=1
             elif da.lower()=="south":
@@ -312,12 +312,12 @@ class Application(Frame):
                 self.i = 0
             elif self.i < 0:
                 self.i = self.map1.positions.shape[1] - 1
-                
+
             if self.j >= self.map1.positions.shape[1]:
                 self.j = 0
             elif self.j < 0:
                 self.j = self.map1.positions.shape[1] - 1
-            
+
         else:
             desc = "Ok, look what you see in the next zone: a {}\n".format(
                 self.map1.positions[self.i,self.j])
@@ -340,8 +340,8 @@ class Application(Frame):
         if self.prota.day//365==1:
             self.prota.day=0
             self.prota.age+=1
-        
-                
+
+
     def quit(self):
         """A summary of what have been done """
         if askyesno('Verify', 'Do you really want to quit?'):
@@ -382,7 +382,7 @@ class Application(Frame):
                 pass
             else:
                 contents = self.direction.get()
-        # check that the values are ok 
+        # check that the values are ok
         if contents == '':
             message ="The value cannot be empty, please fill it with the right "\
                         "content"
@@ -404,8 +404,8 @@ class Application(Frame):
     def development(self):
         """Prints alert saying it is still not working."""
         showwarning("Sorry", "This feature is still under development")
-        
-    def __funct(self): 
+
+    def __funct(self):
         """Finds the methods begining with game and prepare them for eval
 [to use in the evaluate function]"""
         fns = []
@@ -416,13 +416,13 @@ class Application(Frame):
                 continue
             if hasattr(a, '__code__'):
                 fns.append((a.__code__.co_firstlineno, p))
-        
+
         fns = [x[1] for x in sorted(fns) if re.findall("game", x[1]) != []]
         fns1=[]
         for i in fns:
             fns1.append("self.{}()".format(i))
         return(fns1)
-    
+
     def _mouse_wheel(self, event):
         """A function to handle the mouse wheel rolling to bind with the
 scroll bar"""
@@ -433,7 +433,7 @@ scroll bar"""
         if event.num == 4 or event.delta == 120:
             count += 1
         return(-1*(count/120))
-    
+
 if __name__ == '__main__':
     root = Tk()
     root.title("Game")
